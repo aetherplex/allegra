@@ -1,0 +1,224 @@
+#pragma version 5
+
+// ROUTING
+txn ApplicationID
+int 0
+==
+bnz on_creation
+txn OnCompletion
+int DeleteApplication
+==
+bnz on_delete
+txn OnCompletion
+int UpdateApplication
+==
+bnz on_update
+txn OnCompletion
+int CloseOut
+==
+bnz on_closeout
+txn OnCompletion
+int NoOp
+==
+bnz on_noop
+txn OnCompletion
+int OptIn
+==
+bnz on_opt_in
+
+// ON_CREATION
+on_creation:
+// check number of args
+txn NumAppArgs
+int 5
+==
+assert
+// reg registration range
+byte "reg_begin"
+txna ApplicationArgs 0
+btoi
+app_global_put
+byte "reg_end"
+txna ApplicationArgs 1
+btoi
+app_global_put
+// set voting range
+byte "vote_begin"
+txna ApplicationArgs 2
+btoi
+app_global_put
+byte "vote_end"
+txna ApplicationArgs 3
+btoi
+app_global_put
+// set voting asset ID
+byte "vote_token_id"
+txna ApplicationArgs 4
+btoi
+app_global_put
+b success
+
+// ON_NOOP
+on_noop:
+txna ApplicationArgs 0
+byte "vote"
+==
+bnz on_vote
+b failure
+
+// ON_OPT_IN
+on_opt_in:
+global LatestTimestamp
+byte "reg_begin"
+app_global_get
+>=
+global LatestTimestamp
+byte  "reg_end"
+app_global_get
+<=
+&&
+assert
+b success
+
+// ON_VOTE
+on_vote:
+global LatestTimestamp
+byte "vote_begin"
+app_global_get
+>=
+global LatestTimestamp
+byte  "vote_end"
+app_global_get
+<=
+&&
+assert
+// check that the account has opted in
+txn Sender
+txn ApplicationID
+app_opted_in
+assert
+// ensure the asset passed in is the vote token
+txn Sender
+byte "vote_token_id"
+app_global_get
+txna Assets 0
+==
+assert
+txna Assets 0
+asset_holding_get AssetBalance
+assert
+pop
+int 1 // does the voter have at least 1 vote token
+>=
+assert
+// check groupsize
+global GroupSize
+int 2
+==
+assert
+// check second txn is of type asset xfter
+gtxn 1 TypeEnum
+int axfer
+==
+assert
+// check that this contract is the asset recipient
+global CurrentApplicationAddress
+gtxn 1 AssetReceiver
+==
+assert
+// verify the asset being sent is correct
+gtxn 1 XferAsset
+byte "vote_token_id"
+app_global_get
+==
+assert
+// check that sender has not already voted
+txn Sender
+txn ApplicationID
+byte "voted"
+app_global_get_ex
+bnz voted
+pop
+// check sending min amount
+gtxn 1 Amount
+dup
+store 1 // token amount
+int 1
+>=
+assert
+// store vote weight in user account
+txn Sender
+byte "vote_weight"
+load 1
+app_local_put
+// can only vote for option a or b
+txna ApplicationArgs 1
+byte "option_a"
+==
+txna ApplicationArgs 1
+byte "option_b"
+==
+||
+assert
+// read existing vote candidate
+// in global state and incremement vote
+global CurrentApplicationID
+txna ApplicationArgs 1 // vote choice
+app_global_get_ex
+bnz increment_existing
+pop
+int 0
+increment_existing:
+int 1
++
+store 1 // vote count
+txna ApplicationArgs 1
+load 1
+app_global_put
+// store the choice in the sender's local state
+txn Sender
+byte "vote_choice"
+txna ApplicationArgs 1
+app_local_put
+b success
+
+// VOTED
+voted:
+pop
+int 1
+return
+
+// ON_DELETE
+on_delete:
+txn Sender
+global CreatorAddress
+==
+assert
+int 1
+return
+
+// ON_UPDATE
+on_update:
+txn Sender
+global CreatorAddress
+==
+assert
+int 1
+return
+
+// ON_CLOSEOUT
+on_closeout:
+txn Sender
+global CreatorAddress
+==
+assert
+int 1
+return
+
+success:
+int 1
+return
+
+failure:
+int 0
+return
