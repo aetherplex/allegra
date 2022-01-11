@@ -7,35 +7,35 @@ import { selectNetwork } from '../store/networkSlice/selectors';
 import { Network } from '../types';
 
 function Footer() {
-  const [round, setRound] = useState<number>();
+  // const [round, setRound] = useState<number>();
   const network = useSelector(selectNetwork);
 
-  const { status, data, error, isFetching } = useQuery(
-    'blks',
-    async () => {
-      const res = await axios.get(
-        `${
-          network.name === 'sandbox'
-            ? network.algodNetwork.fullServer
-            : network.algodNetwork.server
-        }/v2/status`,
-        {
-          headers: {
-            ...network.algodNetwork.token,
-          },
-        }
-      );
-      return res.data;
-    },
-    {
-      // Refetch the data every three seconds
-      refetchInterval: 3000,
-    }
-  );
+  // // const { status, data, error, isFetching } = useQuery(
+  // //   'blks',
+  // //   async () => {
+  // //     const res = await axios.get(
+  // //       `${
+  // //         network.name === 'sandbox'
+  // //           ? network.algodNetwork.fullServer
+  // //           : network.algodNetwork.server
+  // //       }/v2/status`,
+  // //       {
+  // //         headers: {
+  // //           ...network.algodNetwork.token,
+  // //         },
+  // //       }
+  // //     );
+  // //     return res.data;
+  // //   },
+  // //   {
+  // //     // Refetch the data every three seconds
+  // //     refetchInterval: 3000,
+  // //   }
+  // // );
 
-  useEffect(() => {
-    setRound(data?.['last-round']);
-  }, [data]);
+  // useEffect(() => {
+  //   setRound(data?.['last-round']);
+  // }, [data]);
 
   return (
     <Flex
@@ -46,9 +46,7 @@ function Footer() {
       flexDir="column"
     >
       <Text fontSize="sm" color="gray.600"></Text>
-      <Badge>
-        {network.name}: {round}
-      </Badge>
+      <Badge>{network.name}</Badge>
     </Flex>
   );
 }
