@@ -17,6 +17,7 @@ import {
   selectActiveAddress,
   selectAddresses,
 } from '../store/authSlice/selectors';
+import { setNetwork } from '../store/networkSlice';
 import { selectNetwork } from '../store/networkSlice/selectors';
 import { shortenAddress, useAppDispatch } from '../utils/helpers';
 declare const AlgoSigner: any;
@@ -39,6 +40,27 @@ function Header() {
     dispatch(setAddresses(addresses));
   };
 
+  const changeNetwork = async (value: any) => {
+    if (value !== network.name) {
+      try {
+        await dispatch(setNetwork(value));
+        toast({
+          title: 'Network changed',
+          description: `You are now connected to ${value}`,
+          status: 'success',
+          duration: 3000,
+        });
+      } catch (e: any) {
+        toast({
+          title: 'Error',
+          description: e.message,
+          status: 'error',
+          duration: 5000,
+        });
+      }
+    }
+  };
+
   const copyAddress = async () => {
     navigator.clipboard.writeText(activeAddress);
     toast({
@@ -53,7 +75,7 @@ function Header() {
   const changeAddress = async (address: string) => {
     dispatch(setActiveAddress(address));
     toast({
-      title: 'Address changed',
+      title: 'Active account changed',
       description: `${shortenAddress(address)}`,
       status: 'success',
       duration: 3000,
@@ -90,6 +112,16 @@ function Header() {
         ) : (
           <Button onClick={connectWallet}>Connect wallet</Button>
         )}
+        <Select
+          w="auto"
+          cursor="pointer"
+          onChange={(e) => changeNetwork(e.target.value)}
+        >
+          <option value="mainnet">MainNet</option>
+          <option value="testnet">TestNet</option>
+          <option value="betanet">BetaNet</option>
+          <option value="sandbox">Sandbox</option>
+        </Select>
         <IconButton
           onClick={toggleColorMode}
           aria-label="toggle dark mode"

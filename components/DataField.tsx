@@ -11,7 +11,7 @@ function DataField({ label, value }: IDataFieldProps) {
 
   const bgColor = colorMode === 'light' ? 'gray.100' : 'gray.700';
   return (
-    <Stack w="100%" p={4} bgColor={bgColor} borderRadius="xl" spacing={0.1}>
+    <Stack w="100%" p={5} bgColor={bgColor} borderRadius="xl" spacing={0.1}>
       <Text fontSize="xs" color="gray.500">
         {label}
       </Text>

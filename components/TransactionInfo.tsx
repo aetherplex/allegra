@@ -105,7 +105,7 @@ function TransactionInfo({
   );
 
   return (
-    <Flex flexDir="column" w="50%" flexGrow={1}>
+    <Flex flexDir="column" w="100%" flexGrow={1}>
       <Heading fontSize="xl">Transaction information</Heading>
       {assetID ? renderInfo() : renderEmpty()}
     </Flex>

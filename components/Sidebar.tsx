@@ -32,27 +32,6 @@ function Sidebar() {
   const inactiveColor = colorMode === 'light' ? 'gray.600' : 'gray.400';
   const toast = useToast();
 
-  const changeNetwork = async (value: any) => {
-    if (value !== network.name) {
-      try {
-        await dispatch(setNetwork(value));
-        toast({
-          title: 'Network changed',
-          description: `You are now connected to ${value}`,
-          status: 'success',
-          duration: 3000,
-        });
-      } catch (e: any) {
-        toast({
-          title: 'Error',
-          description: e.message,
-          status: 'error',
-          duration: 5000,
-        });
-      }
-    }
-  };
-
   return (
     <Flex
       flexDir="column"
@@ -99,21 +78,6 @@ function Sidebar() {
           </Link>
         </Stack>
       </Flex>
-      <Stack>
-        <Text fontSize="sm" color="gray.500">
-          Current network:
-        </Text>
-        <Select
-          w="auto"
-          cursor="pointer"
-          onChange={(e) => changeNetwork(e.target.value)}
-        >
-          <option value="mainnet">MainNet</option>
-          <option value="testnet">TestNet</option>
-          <option value="betanet">BetaNet</option>
-          <option value="sandbox">Sandbox</option>
-        </Select>
-      </Stack>
     </Flex>
   );
 }

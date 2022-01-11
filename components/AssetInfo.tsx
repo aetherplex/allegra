@@ -40,7 +40,7 @@ function AssetInfo({
         w="100%"
         bgColor={bgColor}
         borderRadius="xl"
-        p={4}
+        p={5}
         gridColumnStart={1}
         gridColumnEnd={4}
       >
@@ -59,35 +59,36 @@ function AssetInfo({
         w="100%"
         bgColor={bgColor}
         borderRadius="xl"
-        p={4}
+        p={5}
         gridColumnStart={1}
         gridColumnEnd={4}
-        spacing={6}
+        spacing={4}
       >
-        <HStack>
+        <Heading size="md">Controlling addresses</Heading>
+        <Stack spacing={1}>
           <Text fontSize="sm" color="gray.500">
             Manager address:
           </Text>
           <Text fontSize="sm">{managerAddr || '-'}</Text>
-        </HStack>
-        <HStack>
+        </Stack>
+        <Stack spacing={1}>
           <Text fontSize="sm" color="gray.500">
             Reserve address:
           </Text>
           <Text fontSize="sm">{reserveAddr || '-'}</Text>
-        </HStack>
-        <HStack>
+        </Stack>
+        <Stack spacing={1}>
           <Text fontSize="sm" color="gray.500">
             Freeze address:
           </Text>
           <Text fontSize="sm">{freezeAddr || '-'}</Text>
-        </HStack>
-        <HStack>
+        </Stack>
+        <Stack spacing={1}>
           <Text fontSize="sm" color="gray.500">
             Clawback address:
           </Text>
           <Text fontSize="sm">{clawbackAddr || '-'}</Text>
-        </HStack>
+        </Stack>
       </Stack>
     </Grid>
   );
@@ -105,7 +106,7 @@ function AssetInfo({
   );
 
   return (
-    <Flex flexDir="column" w="50%" flexGrow={1}>
+    <Flex flexDir="column" w="100%" flexGrow={1}>
       <Heading fontSize="xl">Asset information</Heading>
       {assetID ? renderInfo() : renderEmpty()}
     </Flex>

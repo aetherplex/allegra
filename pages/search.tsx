@@ -4,6 +4,7 @@ import {
   Flex,
   Heading,
   HStack,
+  Icon,
   Input,
   Select,
   Spinner,
@@ -14,6 +15,7 @@ import axios from 'axios';
 import Head from 'next/head';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { BiSearch } from 'react-icons/bi';
 import { useSelector } from 'react-redux';
 import AccountInfo from '../components/AccountInfo';
 import ApplicationInfo from '../components/ApplicationInfo';
@@ -52,7 +54,7 @@ function Search() {
           network.name === 'sandbox'
             ? network.indexerNetwork.fullServer
             : network.indexerNetwork.server
-        }/v2/${type.toLowerCase()}s/${searchValue.toLowerCase()}`,
+        }/v2/${type.toLowerCase()}s/${searchValue}`,
         {
           headers: {
             ...network.indexerNetwork.token,
@@ -192,7 +194,10 @@ function Search() {
       <Head>
         <title>Search | Allegory</title>
       </Head>
-      <Heading>Search blockchain</Heading>
+      <HStack>
+        <Icon as={BiSearch} w={7} h={7} />
+        <Heading size="lg">Search blockchain</Heading>
+      </HStack>
       <Text mt={4} fontSize="lg">
         {/* @ts-ignore */}
         {`Search by ${type} ${searchTypes[type]}.`}
@@ -202,8 +207,9 @@ function Search() {
         display="flex"
         flexGrow={1}
         flexDir="column"
+        w="70%"
       >
-        <Flex w="50%" mt={3}>
+        <Flex w="100%" mt={3}>
           <HStack w="100%">
             <Input
               w="100%"
@@ -226,7 +232,7 @@ function Search() {
             </Button>
           </HStack>
         </Flex>
-        <Flex mt={16} flexGrow={1} w="50%">
+        <Flex mt={16} flexGrow={1} w="100%">
           {isLoading ? renderLoading() : renderInfo()}
         </Flex>
       </chakra.form>

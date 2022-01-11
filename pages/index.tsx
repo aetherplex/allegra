@@ -4,16 +4,20 @@ import {
   Flex,
   Grid,
   Heading,
+  HStack,
+  Icon,
   Select,
   Spinner,
   Stack,
   Text,
+  useColorMode,
   useToast,
 } from '@chakra-ui/react';
 import { SuggestedParams } from 'algosdk';
 import Head from 'next/head';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { BiPencil } from 'react-icons/bi';
 import { useSelector } from 'react-redux';
 import Field from '../components/Field';
 import { commonFields } from '../data/commonFields';
@@ -34,6 +38,7 @@ function Home() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const address = useSelector(selectActiveAddress);
   const [isFetching, setIsFetching] = useState<boolean>(false);
+  const { colorMode } = useColorMode();
 
   const toast = useToast();
 
@@ -215,7 +220,7 @@ function Home() {
             w="100%"
             flexDir="column"
             minH="30%"
-            bgColor="gray.900"
+            bgColor={colorMode === 'light' ? 'gray.100' : 'gray.900'}
             borderRadius="lg"
             p={4}
           >
@@ -247,7 +252,10 @@ function Home() {
       <Head>
         <title>Create | Allegory</title>
       </Head>
-      <Heading size="lg">Create transaction</Heading>
+      <HStack>
+        <Icon as={BiPencil} w={7} h={7} />
+        <Heading size="lg">Create transaction</Heading>
+      </HStack>
       {isFetching ? renderLoading() : render()}
     </Flex>
   );
