@@ -11,6 +11,7 @@ import {
   Spinner,
 } from '@chakra-ui/react';
 import axios from 'axios';
+import Head from 'next/head';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useQuery } from 'react-query';
@@ -104,6 +105,9 @@ function Search() {
 
   return (
     <Flex w="100%" flexDir="column">
+      <Head>
+        <title>Allegory | Search</title>
+      </Head>
       <Heading>Search blockchain</Heading>
       <Text mt={4} fontSize="lg">
         Search by ID.

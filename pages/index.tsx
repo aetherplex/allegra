@@ -10,6 +10,7 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { SuggestedParams } from 'algosdk';
+import Head from 'next/head';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
@@ -91,6 +92,9 @@ function Home() {
 
   return (
     <Flex w="100%" flexDir="column">
+      <Head>
+        <title>Allegory | Create</title>
+      </Head>
       {/* Type */}
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid gridTemplateColumns="repeat(3, 1fr)" gap={6} w="100%">
