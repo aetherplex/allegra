@@ -15,7 +15,7 @@ export async function verboseWaitForConfirmation(
   setMessage(['Awaiting confirmation (this will take several seconds)...']);
   const roundTimeout = 2;
   setMessage((prev) => [...prev, 'Transaction ID: ' + txnId]);
-  const completedTx = await waitForConfirmation(client, txnId, roundTimeout);
+  const completedTx = await waitForConfirmation(txnId, roundTimeout, client);
   setMessage((prev) => [...prev, 'Transaction successful.']);
   return completedTx;
 }
@@ -28,9 +28,9 @@ export async function verboseWaitForConfirmation(
  * @returns  The pending transaction information
  */
 async function waitForConfirmation(
-  algodclient?: Algodv2,
   txId: string,
-  timeout: number
+  timeout: number,
+  algodclient?: Algodv2
 ): Promise<Record<string, any>> {
   if (algodclient == null || txId == null || timeout < 0) {
     throw new Error('Bad arguments.');
