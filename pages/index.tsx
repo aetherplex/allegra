@@ -1,12 +1,9 @@
 import {
   Button,
-  chakra,
   Checkbox,
-  CheckboxGroup,
   Flex,
   Grid,
   Heading,
-  Input,
   Select,
   Stack,
   Text,
@@ -41,11 +38,11 @@ function Home() {
   const fetchParams = async () => {
     const params = await client?.getTransactionParams().do();
     setSuggestedParams(params);
-    setValue('fee', params.fee);
-    setValue('firstRound', params.firstRound);
-    setValue('lastRound', params.lastRound);
-    setValue('genesisHash', params.genesisHash);
-    setValue('genesisID', params.genesisID);
+    setValue('fee', params?.fee);
+    setValue('firstRound', params?.firstRound);
+    setValue('lastRound', params?.lastRound);
+    setValue('genesisHash', params?.genesisHash);
+    setValue('genesisID', params?.genesisID);
     setValue('sender', address);
   };
 
@@ -59,7 +56,8 @@ function Home() {
     } catch (err: unknown) {
       toast({
         title: 'Error',
-        description: err?.message,
+        // @ts-ignore
+        description: err.message || 'Something went wrong',
         status: 'error',
       });
       setIsLoading(false);

@@ -1,6 +1,6 @@
-import { Field } from '../types';
+import { IField } from '../types';
 
-export const commonFields: Field[] = [
+export const commonFields: IField[] = [
   {
     name: 'Fee',
     description:
