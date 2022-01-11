@@ -28,8 +28,8 @@ function Footer() {
       return res.data;
     },
     {
-      // Refetch the data every second
-      refetchInterval: 1000,
+      // Refetch the data every three seconds
+      refetchInterval: 3000,
     }
   );
 
