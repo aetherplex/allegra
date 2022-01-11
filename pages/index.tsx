@@ -142,6 +142,7 @@ function Home() {
                 if (
                   useSuggestedParams &&
                   suggestedParams &&
+                  // @ts-ignore
                   suggestedParams[camelize(field.name)] !== undefined
                 ) {
                   console.log('SuggestedParams: ', suggestedParams);
