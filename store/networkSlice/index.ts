@@ -6,12 +6,12 @@ const initialState: INetworkState = {
   algodNetwork: {
     port: '',
     server: 'https://mainnet-algorand.api.purestake.io/ps2',
-    token: { 'x-api-key': '4kzNFCdbS52NrnN9c28664H7Lba21vQq5HvJC53W' },
+    token: { 'x-api-key': process.env.NEXT_PUBLIC_PURESTAKE_API_KEY },
   },
   indexerNetwork: {
     port: '',
     server: 'https://mainnet-algorand.api.purestake.io/idx2',
-    token: { 'x-api-key': '4kzNFCdbS52NrnN9c28664H7Lba21vQq5HvJC53W' },
+    token: { 'x-api-key': process.env.NEXT_PUBLIC_PURESTAKE_API_KEY },
   },
 };
 
@@ -27,12 +27,12 @@ export const networkSlice = createSlice({
           state.algodNetwork = {
             port: '',
             server: 'https://mainnet-algorand.api.purestake.io/ps2',
-            token: { 'x-api-key': '4kzNFCdbS52NrnN9c28664H7Lba21vQq5HvJC53W' },
+            token: { 'x-api-key': process.env.NEXT_PUBLIC_PURESTAKE_API_KEY },
           };
           state.indexerNetwork = {
             port: '',
             server: 'https://mainnet-algorand.api.purestake.io/idx2',
-            token: { 'x-api-key': '4kzNFCdbS52NrnN9c28664H7Lba21vQq5HvJC53W' },
+            token: { 'x-api-key': process.env.NEXT_PUBLIC_PURESTAKE_API_KEY },
           };
           break;
         case Network.TestNet:
@@ -40,12 +40,12 @@ export const networkSlice = createSlice({
           state.algodNetwork = {
             port: '',
             server: 'https://testnet-algorand.api.purestake.io/ps2',
-            token: { 'x-api-key': '4kzNFCdbS52NrnN9c28664H7Lba21vQq5HvJC53W' },
+            token: { 'x-api-key': process.env.NEXT_PUBLIC_PURESTAKE_API_KEY },
           };
           state.indexerNetwork = {
             port: '',
             server: 'https://testnet-algorand.api.purestake.io/idx2',
-            token: { 'x-api-key': '4kzNFCdbS52NrnN9c28664H7Lba21vQq5HvJC53W' },
+            token: { 'x-api-key': process.env.NEXT_PUBLIC_PURESTAKE_API_KEY },
           };
           break;
         case Network.BetaNet:
@@ -53,12 +53,12 @@ export const networkSlice = createSlice({
           state.algodNetwork = {
             port: '',
             server: 'https://betanet-algorand.api.purestake.io/ps2',
-            token: { 'x-api-key': '4kzNFCdbS52NrnN9c28664H7Lba21vQq5HvJC53W' },
+            token: { 'x-api-key': process.env.NEXT_PUBLIC_PURESTAKE_API_KEY },
           };
           state.indexerNetwork = {
             port: '',
             server: 'https://betanet-algorand.api.purestake.io/idx2',
-            token: { 'x-api-key': '4kzNFCdbS52NrnN9c28664H7Lba21vQq5HvJC53W' },
+            token: { 'x-api-key': process.env.NEXT_PUBLIC_PURESTAKE_API_KEY },
           };
           break;
         case Network.Sandbox:
