@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import Layout from '../components/Layout';
 import { Context, initialState } from '../context';
 import { store } from '../store';
+import '../styles/globals.css';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const queryClient = new QueryClient();

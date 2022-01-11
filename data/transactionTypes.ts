@@ -50,22 +50,6 @@ export const transactionTypes: TransactionType[] = [
         codec: 'selkey',
       },
       {
-        name: 'First Valid',
-        description:
-          'The first round that the participation key is valid. Not to be confused with the FirstValid round of the keyreg transaction.',
-        type: 'uint64',
-        required: true,
-        codec: 'votefst',
-      },
-      {
-        name: 'Last Valid',
-        description:
-          'The last round that the participation key is valid. Not to be confused with the LastValid round of the keyreg transaction.',
-        type: 'uint64',
-        required: true,
-        codec: 'votelst',
-      },
-      {
         name: 'Vote Key Dilution',
         description: 'This is the dilution for the 2-level participation key.',
         type: 'uint64',
@@ -191,7 +175,7 @@ export const transactionTypes: TransactionType[] = [
     type: 'acfg',
     fields: [
       {
-        name: 'ConfigAsset',
+        name: 'Asset ID',
         required: true,
         description:
           'For re-configure or destroy transactions, this is the unique asset ID. On asset creation, the ID is set to zero.',
@@ -247,14 +231,14 @@ export const transactionTypes: TransactionType[] = [
     type: 'axfer',
     fields: [
       {
-        name: 'XferAsset',
+        name: 'Asset ID',
         description: 'The unique ID of the asset to be transferred.',
         type: 'uint64',
         required: true,
         codec: 'xaid',
       },
       {
-        name: 'AssetAmount',
+        name: 'Amount',
         description:
           "The amount of the asset to be transferred. A zero amount transferred to self allocates that asset in the account's Asset map.",
         type: 'uint64',
@@ -262,22 +246,14 @@ export const transactionTypes: TransactionType[] = [
         codec: 'aamt',
       },
       {
-        name: 'AssetSender',
-        description:
-          "The sender of the transfer. The regular sender field should be used and this one set to the zero value for regular transfers between accounts. If this value is nonzero, it indicates a clawback transaction where the sender is the asset's clawback address and the asset sender is the address from which the funds will be withdrawn.",
-        type: 'Address',
-        required: true,
-        codec: 'asnd',
-      },
-      {
-        name: 'AssetReceiver',
+        name: 'Receiver',
         description: 'The recipient of the asset transfer.',
         type: 'Address',
         required: true,
         codec: 'arcv',
       },
       {
-        name: 'AssetCloseTo',
+        name: 'Close Remainder To',
         description:
           "Specify this field to remove the asset holding from the sender account and reduce the account's minimum balance (i.e. opt-out of the asset).",
         type: 'Address',
@@ -292,26 +268,11 @@ export const transactionTypes: TransactionType[] = [
     type: 'axfer',
     fields: [
       {
-        name: 'XferAsset',
+        name: 'Asset ID',
         description: 'The unique ID of the asset to opt-in to.',
         type: 'uint64',
         required: true,
         codec: 'xaid',
-      },
-      {
-        name: 'AssetSender',
-        description:
-          "The account which is allocating the asset to their account's Asset map.",
-        type: 'Address',
-        required: true,
-        codec: 'asnd',
-      },
-      {
-        name: 'AssetReceiver',
-        description: 'The recipient of the asset transfer.',
-        type: 'Address',
-        required: true,
-        codec: 'arcv',
       },
     ],
   },
@@ -321,37 +282,28 @@ export const transactionTypes: TransactionType[] = [
     type: 'axfer',
     fields: [
       {
-        name: 'Sender',
-        description:
-          'The sender of this transaction must be the clawback account specified in the asset configuration.',
-        type: 'Address',
-        required: true,
-        codec: 'snd',
-      },
-      {
-        name: 'XferAsset',
+        name: 'Asset ID',
         description: 'The unique ID of the asset to opt-in to.',
         type: 'uint64',
         required: true,
         codec: 'xaid',
       },
       {
-        name: 'AssetSender',
-        description:
-          "The account which is allocating the asset to their account's Asset map.",
-        type: 'Address',
+        name: 'Amount',
+        description: 'The amount of the asset to be transferred.',
+        type: 'uint64',
         required: true,
-        codec: 'asnd',
+        codec: 'aamt',
       },
       {
-        name: 'AssetReceiver',
+        name: 'Receiver',
         description: 'The recipient of the asset transfer.',
         type: 'Address',
         required: true,
         codec: 'arcv',
       },
       {
-        name: 'AssetCloseTo',
+        name: 'Close Remainder To',
         description:
           'Specify this field to remove the entire asset holding balance from the AssetSender account. It will not remove the asset holding.',
         type: 'Address',
@@ -366,7 +318,7 @@ export const transactionTypes: TransactionType[] = [
     type: 'afrz',
     fields: [
       {
-        name: 'FreezeAccount',
+        name: 'Freeze Account',
         description:
           'The address of the account whose asset is being frozen or unfrozen.',
         type: 'Address',
@@ -374,14 +326,14 @@ export const transactionTypes: TransactionType[] = [
         codec: 'fadd',
       },
       {
-        name: 'FreezeAsset',
+        name: 'Freeze Asset',
         description: 'The asset ID being frozen or unfrozen.',
         type: 'uint64',
         required: true,
         codec: 'faid',
       },
       {
-        name: 'AssetFrozen',
+        name: 'Asset Frozen',
         description: 'True to freeze the asset.',
         type: 'bool',
         required: true,
@@ -467,7 +419,7 @@ export const transactionTypes: TransactionType[] = [
         codec: 'apgs',
         fields: [
           {
-            name: 'Num Ints',
+            name: 'Global Num Ints',
             description:
               'Maximum number of integer values that may be stored in the global application key/value store. Immutable.',
             type: 'uint64',
@@ -475,7 +427,7 @@ export const transactionTypes: TransactionType[] = [
             codec: 'nui',
           },
           {
-            name: 'Num ByteSlices',
+            name: 'Global Num ByteSlices ',
             description:
               'Maximum number of byte slices values that may be stored in the global application key/value store. Immutable.',
             type: 'uint64',
@@ -493,7 +445,7 @@ export const transactionTypes: TransactionType[] = [
         codec: 'apls',
         fields: [
           {
-            name: 'Num Ints',
+            name: 'Local Num Ints',
             description:
               'Maximum number of integer values that may be stored in the local  application key/value store. Immutable.',
             type: 'uint64',
@@ -501,7 +453,7 @@ export const transactionTypes: TransactionType[] = [
             codec: 'nui',
           },
           {
-            name: 'Num ByteSlices',
+            name: 'Local Num ByteSlices',
             description:
               'Maximum number of byte slices values that may be stored in the local  application key/value store. Immutable.',
             type: 'uint64',

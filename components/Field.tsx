@@ -1,11 +1,17 @@
-import { Icon, InfoOutlineIcon } from '@chakra-ui/icons';
 import {
-  Flex,
-  Text,
-  Stack,
-  Input,
+  AddIcon,
+  InfoOutlineIcon,
+  MinusIcon,
+  PlusSquareIcon,
+} from '@chakra-ui/icons';
+import {
   Button,
+  Checkbox,
+  Flex,
   HStack,
+  Icon,
+  IconButton,
+  Input,
   Popover,
   PopoverArrow,
   PopoverBody,
@@ -13,16 +19,20 @@ import {
   PopoverContent,
   PopoverHeader,
   PopoverTrigger,
-  IconButton,
-  useColorMode,
+  Select,
+  Stack,
+  Switch,
+  Text,
 } from '@chakra-ui/react';
-import { isDark, isLight, lighten } from '@chakra-ui/theme-tools';
 import { SuggestedParams } from 'algosdk';
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState } from 'react';
+import { FieldValues, UseFormRegister, UseFormSetValue } from 'react-hook-form';
 import { useField } from '../hooks/useField';
-import { selectAddress } from '../store/authSlice/selectors';
-import { FieldType } from '../types';
+import { FieldType, IFormValues } from '../types';
+import { camelize } from '../utils/helpers';
+import FileUpload from './FileUpload';
+import MultiInput from './MultiInput';
+import { FiFile } from 'react-icons/fi';
 
 interface FieldProps {
   name: string;
@@ -32,6 +42,8 @@ interface FieldProps {
   codec: string;
   suggestedParams: SuggestedParams | undefined;
   useSuggestedParams: boolean;
+  register: UseFormRegister<FieldValues>;
+  setValue: UseFormSetValue<Partial<IFormValues>>;
 }
 
 function Field({
@@ -42,33 +54,72 @@ function Field({
   codec,
   suggestedParams,
   useSuggestedParams,
+  register,
+  setValue,
 }: FieldProps) {
-  const [value, setValue] = useState<string | number>();
+  const [numInputs, setNumInputs] = useState(1);
   const { inputType } = useField({ name, type, description, required, codec });
 
-  const address = useSelector(selectAddress);
-
-  useEffect(() => {
-    console.log(suggestedParams);
-    if (name === 'LastValid') {
-      name = 'LastRound';
+  const renderInput = () => {
+    if (name === 'OnComplete') {
+      setValue('onComplete', 'NoOp');
+      return (
+        <Select
+          size="sm"
+          cursor="pointer"
+          {...register(camelize(name), { required })}
+        >
+          <option value="NoOp">NoOp</option>
+          <option value="OptIn">OptIn</option>
+          <option value="CloseOut">CloseOut</option>
+          <option value="ClearState">ClearState</option>
+          <option value="UpdateApplication">UpdateApplication</option>
+          <option value="DeleteApplication">DeleteApplication</option>
+        </Select>
+      );
     }
-    if (name === 'FirstValid') {
-      name = 'FirstRound';
+    if (
+      name === 'Accounts' ||
+      name === 'App Arguments' ||
+      name === 'Foreign Apps' ||
+      name === 'Foreign Assets'
+    ) {
+      return <MultiInput register={register} name={name} />;
     }
-    const index = (name.charAt(0).toLowerCase() + name.slice(1)) as keyof Pick<
-      SuggestedParams,
-      'fee' | 'firstRound' | 'lastRound' | 'genesisHash' | 'genesisID'
-    >;
-    if (suggestedParams && suggestedParams[index]) {
-      setValue(suggestedParams[index]);
+    if (type === 'bool') {
+      return <Switch {...register(camelize(name), { required })} />;
     }
-  }, []);
+    if (name === 'Approval Program' || name === 'Clear State Program') {
+      return (
+        <FileUpload register={register(camelize(name), { required })}>
+          <Button size="sm" leftIcon={<Icon as={FiFile} />}>
+            Upload
+          </Button>
+        </FileUpload>
+      );
+    }
+    if (name === 'URL') {
+      return (
+        <Input
+          size="sm"
+          type={inputType}
+          {...register(name.toLowerCase(), { required })}
+        />
+      );
+    }
+    return (
+      <Input
+        size="sm"
+        type={inputType}
+        {...register(camelize(name), { required })}
+      />
+    );
+  };
 
   return (
     <Stack w="100%">
       <Flex w="100%" justifyContent="space-between" alignItems="center">
-        <HStack spacing=".1rem">
+        <HStack spacing=".5rem">
           <Text fontSize="xs">{name}</Text>
           <Popover>
             <PopoverTrigger>
@@ -94,11 +145,7 @@ function Field({
           {type}
         </Text>
       </Flex>
-      <Input
-        type={inputType}
-        value={useSuggestedParams ? value : ''}
-        disabled={!!value}
-      />
+      {renderInput()}
     </Stack>
   );
 }

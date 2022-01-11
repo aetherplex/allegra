@@ -4,6 +4,7 @@ export const initialState = {
   account: {
     address: '',
   },
+  setAccount: () => {},
 };
 
 export const Context = createContext(initialState);

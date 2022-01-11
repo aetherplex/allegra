@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Field, InputType, inputTypes } from '../types';
+import { IField, InputType, inputTypes } from '../types';
 
 export const useField = ({
   name,
@@ -7,7 +7,7 @@ export const useField = ({
   description,
   required,
   codec,
-}: Field) => {
+}: IField) => {
   const [inputType, setInputType] = useState<InputType>();
 
   useEffect(() => {

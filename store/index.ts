@@ -5,9 +5,11 @@ import {
   Reducer,
 } from '@reduxjs/toolkit';
 import authReducer from './authSlice';
+import networkReducer from './networkSlice';
 
 const combinedReducer = combineReducers({
   auth: authReducer,
+  network: networkReducer,
 });
 
 export const rootReducer: Reducer = (

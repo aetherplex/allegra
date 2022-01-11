@@ -1,23 +1,29 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface IAuthState {
-  address: string;
+  activeAddress: string;
+  addresses: string[];
 }
 
 const initialState: IAuthState = {
-  address: '',
+  activeAddress: '',
+  addresses: [],
 };
 
 export const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setAddress: (state: IAuthState, action: PayloadAction<string>) => {
-      state.address = action.payload;
+    setAddresses: (state: IAuthState, action: PayloadAction<string[]>) => {
+      state.addresses = action.payload;
+      state.activeAddress = action.payload[0];
+    },
+    setActiveAddress: (state: IAuthState, action: PayloadAction<string>) => {
+      state.activeAddress = action.payload;
     },
   },
 });
 
-export const { setAddress } = authSlice.actions;
+export const { setAddresses, setActiveAddress } = authSlice.actions;
 
 export default authSlice.reducer;

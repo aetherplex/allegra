@@ -10,7 +10,7 @@ export const commonFields: Field[] = [
     codec: 'fee',
   },
   {
-    name: 'FirstValid',
+    name: 'First Round',
     description:
       'The first round for when the transaction is valid. If the transaction is sent prior to this round it will be rejected by the network.',
     type: 'uint64',
@@ -18,7 +18,7 @@ export const commonFields: Field[] = [
     codec: 'fv',
   },
   {
-    name: 'LastValid',
+    name: 'Last Round',
     description:
       'The ending round for which the transaction is valid. After this round, the transaction will be rejected by the network.',
     type: 'uint64',
@@ -26,7 +26,7 @@ export const commonFields: Field[] = [
     codec: 'lv',
   },
   {
-    name: 'GenesisHash',
+    name: 'Genesis Hash',
     description:
       'The hash of the genesis block of the network for which the transaction is valid. See the genesis hash for MainNet, TestNet, and BetaNet.',
     type: 'byte[32]',
@@ -41,7 +41,7 @@ export const commonFields: Field[] = [
     codec: 'snd',
   },
   {
-    name: 'TxType',
+    name: 'Transaction Type',
     description:
       'Specifies the type of transaction. This value is automatically generated using any of the developer tools.',
     type: 'string',
@@ -49,7 +49,7 @@ export const commonFields: Field[] = [
     codec: 'type',
   },
   {
-    name: 'GenesisID',
+    name: 'Genesis ID',
     description:
       'The human-readable string that identifies the network for the transaction. The genesis ID is found in the genesis block. See the genesis ID for MainNet, TestNet, and BetaNet.',
     type: 'string',
@@ -80,7 +80,7 @@ export const commonFields: Field[] = [
     codec: 'note',
   },
   {
-    name: 'RekeyTo',
+    name: 'Rekey To',
     description:
       'Specifies the authorized address. This address will be used to authorize all future transactions.',
     type: 'Address',

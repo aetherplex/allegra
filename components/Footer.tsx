@@ -2,18 +2,26 @@ import { Badge, Flex, Text } from '@chakra-ui/react';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
+import { useSelector } from 'react-redux';
+import { selectNetwork } from '../store/networkSlice/selectors';
+import { Network } from '../types';
 
 function Footer() {
   const [round, setRound] = useState<number>();
+  const network = useSelector(selectNetwork);
 
   const { status, data, error, isFetching } = useQuery(
     'blks',
     async () => {
       const res = await axios.get(
-        'http://localhost:4000/sandbox/algod/v2/status',
+        `${
+          network.name === 'sandbox'
+            ? network.algodNetwork.fullServer
+            : network.algodNetwork.server
+        }/v2/status`,
         {
           headers: {
-            'x-key': '709a4b2e-bcbc-40a0-9432-683e6a683842',
+            ...network.algodNetwork.token,
           },
         }
       );
@@ -30,8 +38,17 @@ function Footer() {
   }, [data]);
 
   return (
-    <Flex w="100%" py={6} justifyContent="center" alignItems="center">
-      <Badge>Latest round: {round}</Badge>
+    <Flex
+      w="100%"
+      py={6}
+      justifyContent="center"
+      alignItems="center"
+      flexDir="column"
+    >
+      <Text fontSize="sm" color="gray.600"></Text>
+      <Badge>
+        {network.name}: {round}
+      </Badge>
     </Flex>
   );
 }
