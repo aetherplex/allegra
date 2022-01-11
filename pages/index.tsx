@@ -5,6 +5,7 @@ import {
   Grid,
   Heading,
   Select,
+  Spinner,
   Stack,
   Text,
   useToast,
@@ -20,6 +21,7 @@ import { transactionTypes } from '../data/transactionTypes';
 import { useAlgod } from '../hooks/useAlgod';
 import { selectActiveAddress } from '../store/authSlice/selectors';
 import { IField, IFormValues, TransactionType } from '../types';
+import { camelize } from '../utils/helpers';
 
 function Home() {
   const { register, handleSubmit, watch, setValue, unregister } =
@@ -31,20 +33,34 @@ function Home() {
   const [transactionParams, setTransactionParams] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const address = useSelector(selectActiveAddress);
+  const [isFetching, setIsFetching] = useState<boolean>(false);
 
   const toast = useToast();
 
   const { client, forwardTransaction, messages } = useAlgod();
 
   const fetchParams = async () => {
-    const params = await client?.getTransactionParams().do();
-    setSuggestedParams(params);
-    setValue('fee', params?.fee);
-    setValue('firstRound', params?.firstRound);
-    setValue('lastRound', params?.lastRound);
-    setValue('genesisHash', params?.genesisHash);
-    setValue('genesisID', params?.genesisID);
-    setValue('sender', address);
+    setIsFetching(true);
+    try {
+      const params = await client?.getTransactionParams().do();
+      setSuggestedParams(params);
+      setValue('fee', params?.fee);
+      setValue('firstRound', params?.firstRound);
+      setValue('lastRound', params?.lastRound);
+      setValue('genesisHash', params?.genesisHash);
+      setValue('genesisID', params?.genesisID);
+      setValue('sender', address);
+    } catch (err) {
+      if (err instanceof Error) {
+        toast({
+          title: 'Error',
+          description: err.message,
+          status: 'error',
+          duration: 5000,
+        });
+      }
+    }
+    setIsFetching(false);
   };
 
   const onSubmit = async (data: any) => {
@@ -90,39 +106,43 @@ function Home() {
     setValue('transactionType', transaction?.type);
   }, [transactionType]);
 
-  return (
-    <Flex w="100%" flexDir="column">
-      <Head>
-        <title>Allegory | Create</title>
-      </Head>
-      {/* Type */}
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Grid gridTemplateColumns="repeat(3, 1fr)" gap={6} w="100%">
-          <Stack spacing={6} w="100%">
-            <Heading size="lg">Create transaction</Heading>
-            <Stack mt={6}>
-              <Text fontSize="xs">Transaction type</Text>
-              <Select cursor="pointer" {...register('type')}>
-                {transactionTypes.map((type) => (
-                  <option key={type.type + '_' + type.name} value={type.name}>
-                    {type.name}
-                  </option>
-                ))}
-              </Select>
-            </Stack>
-            <Flex w="100%" flexDir="column">
-              <Heading fontSize="xl">Common transaction parameters</Heading>
-              <Checkbox
-                size="sm"
-                mt={3}
-                defaultChecked={true}
-                alignItems="center"
-                onChange={(e) => setUseSuggestedParams(e.target.checked)}
-              >
-                Use suggested transaction parameters
-              </Checkbox>
-              <Stack mt={3}>
-                {commonFields.map((field) => (
+  const render = () => (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Grid gridTemplateColumns="repeat(3, 1fr)" gap={6} w="100%">
+        <Stack spacing={6} w="100%">
+          <Stack mt={6}>
+            <Text fontSize="xs">Transaction type</Text>
+            <Select cursor="pointer" {...register('type')}>
+              {transactionTypes.map((type) => (
+                <option key={type.type + '_' + type.name} value={type.name}>
+                  {type.name}
+                </option>
+              ))}
+            </Select>
+          </Stack>
+          <Flex w="100%" flexDir="column">
+            <Heading fontSize="xl">Common transaction parameters</Heading>
+            <Checkbox
+              size="sm"
+              mt={3}
+              defaultChecked={true}
+              alignItems="center"
+              onChange={(e) => setUseSuggestedParams(e.target.checked)}
+            >
+              Use suggested transaction parameters
+            </Checkbox>
+            <Stack mt={3}>
+              {commonFields.map((field) => {
+                console.log('Name: ', camelize(field.name));
+                if (
+                  useSuggestedParams &&
+                  suggestedParams &&
+                  suggestedParams[camelize(field.name)] !== undefined
+                ) {
+                  console.log('SuggestedParams: ', suggestedParams);
+                  return;
+                }
+                return (
                   <Field
                     key={field.name}
                     {...field}
@@ -131,82 +151,104 @@ function Home() {
                     register={register}
                     setValue={setValue}
                   />
-                ))}
-              </Stack>
-            </Flex>
-          </Stack>
+                );
+              })}
+            </Stack>
+          </Flex>
+        </Stack>
 
-          <Flex w="100%" flexDir="column">
-            <Heading fontSize="xl">
-              {transactionType && `${transactionType} transaction parameters`}
-            </Heading>
-            <Stack mt={6}>
-              {transactionTypes
-                .find((type: TransactionType) => type.name === transactionType)
-                ?.fields.map((field: IField) =>
-                  field?.fields?.length ? (
-                    field.fields.map((subField: IField) => (
-                      <Field
-                        key={subField.type + '_' + subField.name}
-                        {...subField}
-                        suggestedParams={suggestedParams}
-                        useSuggestedParams={useSuggestedParams}
-                        register={register}
-                        setValue={setValue}
-                      />
-                    ))
-                  ) : (
+        <Flex w="100%" flexDir="column">
+          <Heading fontSize="xl">
+            {transactionType && `${transactionType} transaction parameters`}
+          </Heading>
+          <Stack mt={6}>
+            {transactionTypes
+              .find((type: TransactionType) => type.name === transactionType)
+              ?.fields.map((field: IField) =>
+                field?.fields?.length ? (
+                  field.fields.map((subField: IField) => (
                     <Field
-                      key={field.type + '_' + field.name}
-                      {...field}
+                      key={subField.type + '_' + subField.name}
+                      {...subField}
                       suggestedParams={suggestedParams}
                       useSuggestedParams={useSuggestedParams}
                       register={register}
                       setValue={setValue}
                     />
-                  )
-                )}
-              )
-            </Stack>
-          </Flex>
-          <Stack>
-            {/* <Flex
-              w="100%"
-              flexDir="column"
-              bgColor="gray.900"
-              minH="40%"
-              borderRadius="lg"
-              p={4}
-            >
-              <chakra.pre color="white" fontSize="sm" wordWrap="break-word">
-                {JSON.stringify(suggestedParams, null, 2)}
-              </chakra.pre>
-            </Flex> */}
-            <Button
-              type="submit"
-              isLoading={isLoading}
-              colorScheme="green"
-            >{`Send ${transactionType} transaction`}</Button>
-            <Heading fontSize="xl" pt={4}>
-              Ouput log
-            </Heading>
-            <Flex
-              w="100%"
-              flexDir="column"
-              minH="30%"
-              bgColor="gray.900"
-              borderRadius="lg"
-              p={4}
-            >
-              {messages?.map((message: string) => (
-                <Text key={message} color="white" fontSize="sm" mt={2}>
-                  {message}
-                </Text>
-              ))}
-            </Flex>
+                  ))
+                ) : (
+                  <Field
+                    key={field.type + '_' + field.name}
+                    {...field}
+                    suggestedParams={suggestedParams}
+                    useSuggestedParams={useSuggestedParams}
+                    register={register}
+                    setValue={setValue}
+                  />
+                )
+              )}
+            )
           </Stack>
-        </Grid>
-      </form>
+        </Flex>
+        <Stack>
+          {/* <Flex
+       w="100%"
+       flexDir="column"
+       bgColor="gray.900"
+       minH="40%"
+       borderRadius="lg"
+       p={4}
+     >
+       <chakra.pre color="white" fontSize="sm" wordWrap="break-word">
+         {JSON.stringify(suggestedParams, null, 2)}
+       </chakra.pre>
+     </Flex> */}
+          <Button
+            type="submit"
+            isLoading={isLoading}
+            colorScheme="green"
+          >{`Send ${transactionType} transaction`}</Button>
+          <Heading fontSize="xl" pt={4}>
+            Ouput log
+          </Heading>
+          <Flex
+            w="100%"
+            flexDir="column"
+            minH="30%"
+            bgColor="gray.900"
+            borderRadius="lg"
+            p={4}
+          >
+            {messages?.map((message: string) => (
+              <Text key={message} color="white" fontSize="sm" mt={2}>
+                {message}
+              </Text>
+            ))}
+          </Flex>
+        </Stack>
+      </Grid>
+    </form>
+  );
+
+  const renderLoading = () => (
+    <Flex
+      w="100%"
+      flexDir="column"
+      flexGrow={1}
+      alignItems="center"
+      justifyContent="center"
+    >
+      <Spinner size="lg" />
+    </Flex>
+  );
+
+  return (
+    <Flex w="100%" flexDir="column" flexGrow={1}>
+      <Head>
+        <title>Create | Allegory</title>
+      </Head>
+      <Heading size="lg">Create transaction</Heading>
+      {isFetching ? renderLoading() : render()}
     </Flex>
   );
 }

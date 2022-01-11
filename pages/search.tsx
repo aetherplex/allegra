@@ -1,24 +1,27 @@
 import {
-  Flex,
-  Text,
-  Heading,
-  Input,
   Button,
-  HStack,
-  Select,
-  useToast,
   chakra,
+  Flex,
+  Heading,
+  HStack,
+  Input,
+  Select,
   Spinner,
+  Text,
+  useToast,
 } from '@chakra-ui/react';
 import axios from 'axios';
 import Head from 'next/head';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useQuery } from 'react-query';
 import { useSelector } from 'react-redux';
+import AccountInfo from '../components/AccountInfo';
+import ApplicationInfo from '../components/ApplicationInfo';
 import AssetInfo from '../components/AssetInfo';
+import BlockInfo from '../components/BlockInfo';
+import TransactionInfo from '../components/TransactionInfo';
+import { searchTypes } from '../data/searchTypes';
 import { useAlgod } from '../hooks/useAlgod';
-import useSearch from '../hooks/useSearch';
 import { selectNetwork } from '../store/networkSlice/selectors';
 
 function Search() {
@@ -71,24 +74,105 @@ function Search() {
     }
   };
 
-  const renderInfo = () => (
-    <AssetInfo
-      unitName={searchData?.data?.asset?.params?.['unit-name']}
-      assetName={searchData?.data?.asset?.params?.['name']}
-      assetID={searchData?.data?.asset?.index}
-      total={searchData?.data?.asset?.params?.total}
-      decimals={searchData?.data?.asset?.params?.decimals}
-      defaultFrozen={searchData?.data?.asset?.params?.[
-        'default-frozen'
-      ].toString()}
-      url={searchData?.data?.asset?.params?.url}
-      metaDataHash={searchData?.data?.asset?.params?.['metadata-hash']}
-      managerAddr={searchData?.data?.asset?.params?.manager}
-      reserveAddr={searchData?.data?.asset?.params?.reserve}
-      freezeAddr={searchData?.data?.asset?.params?.freeze}
-      clawbackAddr={searchData?.data?.asset?.params?.clawback}
-    />
-  );
+  const renderInfo = () => {
+    switch (type) {
+      case 'asset':
+        return (
+          <AssetInfo
+            unitName={searchData?.data?.asset?.params?.['unit-name']}
+            assetName={searchData?.data?.asset?.params?.['name']}
+            assetID={searchData?.data?.asset?.index}
+            total={searchData?.data?.asset?.params?.total}
+            decimals={searchData?.data?.asset?.params?.decimals}
+            defaultFrozen={searchData?.data?.asset?.params?.[
+              'default-frozen'
+            ].toString()}
+            url={searchData?.data?.asset?.params?.url}
+            metaDataHash={searchData?.data?.asset?.params?.['metadata-hash']}
+            managerAddr={searchData?.data?.asset?.params?.manager}
+            reserveAddr={searchData?.data?.asset?.params?.reserve}
+            freezeAddr={searchData?.data?.asset?.params?.freeze}
+            clawbackAddr={searchData?.data?.asset?.params?.clawback}
+          />
+        );
+      case 'application':
+        return (
+          <ApplicationInfo
+            unitName={searchData?.data?.asset?.params?.['unit-name']}
+            assetName={searchData?.data?.asset?.params?.['name']}
+            assetID={searchData?.data?.asset?.index}
+            total={searchData?.data?.asset?.params?.total}
+            decimals={searchData?.data?.asset?.params?.decimals}
+            defaultFrozen={searchData?.data?.asset?.params?.[
+              'default-frozen'
+            ].toString()}
+            url={searchData?.data?.asset?.params?.url}
+            metaDataHash={searchData?.data?.asset?.params?.['metadata-hash']}
+            managerAddr={searchData?.data?.asset?.params?.manager}
+            reserveAddr={searchData?.data?.asset?.params?.reserve}
+            freezeAddr={searchData?.data?.asset?.params?.freeze}
+            clawbackAddr={searchData?.data?.asset?.params?.clawback}
+          />
+        );
+      case 'account':
+        return (
+          <AccountInfo
+            unitName={searchData?.data?.asset?.params?.['unit-name']}
+            assetName={searchData?.data?.asset?.params?.['name']}
+            assetID={searchData?.data?.asset?.index}
+            total={searchData?.data?.asset?.params?.total}
+            decimals={searchData?.data?.asset?.params?.decimals}
+            defaultFrozen={searchData?.data?.asset?.params?.[
+              'default-frozen'
+            ].toString()}
+            url={searchData?.data?.asset?.params?.url}
+            metaDataHash={searchData?.data?.asset?.params?.['metadata-hash']}
+            managerAddr={searchData?.data?.asset?.params?.manager}
+            reserveAddr={searchData?.data?.asset?.params?.reserve}
+            freezeAddr={searchData?.data?.asset?.params?.freeze}
+            clawbackAddr={searchData?.data?.asset?.params?.clawback}
+          />
+        );
+      case 'transaction':
+        return (
+          <TransactionInfo
+            unitName={searchData?.data?.asset?.params?.['unit-name']}
+            assetName={searchData?.data?.asset?.params?.['name']}
+            assetID={searchData?.data?.asset?.index}
+            total={searchData?.data?.asset?.params?.total}
+            decimals={searchData?.data?.asset?.params?.decimals}
+            defaultFrozen={searchData?.data?.asset?.params?.[
+              'default-frozen'
+            ].toString()}
+            url={searchData?.data?.asset?.params?.url}
+            metaDataHash={searchData?.data?.asset?.params?.['metadata-hash']}
+            managerAddr={searchData?.data?.asset?.params?.manager}
+            reserveAddr={searchData?.data?.asset?.params?.reserve}
+            freezeAddr={searchData?.data?.asset?.params?.freeze}
+            clawbackAddr={searchData?.data?.asset?.params?.clawback}
+          />
+        );
+      case 'block':
+        return (
+          <BlockInfo
+            unitName={searchData?.data?.asset?.params?.['unit-name']}
+            assetName={searchData?.data?.asset?.params?.['name']}
+            assetID={searchData?.data?.asset?.index}
+            total={searchData?.data?.asset?.params?.total}
+            decimals={searchData?.data?.asset?.params?.decimals}
+            defaultFrozen={searchData?.data?.asset?.params?.[
+              'default-frozen'
+            ].toString()}
+            url={searchData?.data?.asset?.params?.url}
+            metaDataHash={searchData?.data?.asset?.params?.['metadata-hash']}
+            managerAddr={searchData?.data?.asset?.params?.manager}
+            reserveAddr={searchData?.data?.asset?.params?.reserve}
+            freezeAddr={searchData?.data?.asset?.params?.freeze}
+            clawbackAddr={searchData?.data?.asset?.params?.clawback}
+          />
+        );
+    }
+  };
 
   const renderLoading = () => {
     return (
@@ -106,11 +190,12 @@ function Search() {
   return (
     <Flex w="100%" flexDir="column">
       <Head>
-        <title>Allegory | Search</title>
+        <title>Search | Allegory</title>
       </Head>
       <Heading>Search blockchain</Heading>
       <Text mt={4} fontSize="lg">
-        Search by ID.
+        {/* @ts-ignore */}
+        {`Search by ${type} ${searchTypes[type]}.`}
       </Text>
       <chakra.form
         onSubmit={handleSubmit(search)}
@@ -126,7 +211,7 @@ function Search() {
               {...register('searchValue', { required: true })}
             />
             <Select
-              w="40%"
+              w="25%"
               cursor="pointer"
               {...register('type', { required: true })}
             >

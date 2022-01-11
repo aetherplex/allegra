@@ -56,7 +56,7 @@ function Sidebar() {
   return (
     <Flex
       flexDir="column"
-      w="15%"
+      w="10%"
       minW="10%"
       bgColor={bgColor}
       px={6}
@@ -66,7 +66,7 @@ function Sidebar() {
     >
       <Flex flexDir="column">
         <Flex justifyContent="space-between" alignItems="center">
-          <Heading fontSize="xl">Allegory</Heading>
+          <Heading fontSize="2xl">Allegory</Heading>
         </Flex>
         <Stack mt={24} spacing="3rem">
           <Link href="/" passHref>
@@ -78,7 +78,7 @@ function Sidebar() {
               }}
             >
               <Icon as={BiPencil} w={3} h={3} />
-              <Text fontSize="md" cursor="pointer">
+              <Text fontSize="md" cursor="pointer" fontWeight="semibold">
                 Create
               </Text>
             </HStack>
@@ -92,7 +92,7 @@ function Sidebar() {
               }}
             >
               <Icon as={BiSearch} w={3} h={3} />
-              <Text fontSize="md" cursor="pointer">
+              <Text fontSize="md" cursor="pointer" fontWeight="semibold">
                 Search
               </Text>
             </HStack>

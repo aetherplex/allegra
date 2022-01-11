@@ -50,6 +50,16 @@ function Header() {
     });
   };
 
+  const changeAddress = async (address: string) => {
+    dispatch(setActiveAddress(address));
+    toast({
+      title: 'Address changed',
+      description: `${shortenAddress(address)}`,
+      status: 'success',
+      duration: 3000,
+    });
+  };
+
   useEffect(() => {
     if (accounts?.length) {
       dispatch(setActiveAddress(accounts[0]));
@@ -68,7 +78,7 @@ function Header() {
             />
             <Select
               cursor="pointer"
-              onChange={(e) => dispatch(setActiveAddress(e.target.value))}
+              onChange={(e) => changeAddress(e.target.value)}
             >
               {addresses?.map((address: any) => (
                 <option key={address} value={address}>
