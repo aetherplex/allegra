@@ -5,13 +5,13 @@ const initialState: INetworkState = {
   name: Network.MainNet,
   algodNetwork: {
     port: '',
-    server: 'https://mainnet-algorand.api.purestake.io/ps2',
-    token: { 'x-api-key': process.env.NEXT_PUBLIC_PURESTAKE_API_KEY },
+    server: 'https://node.algoexplorerapi.io/',
+    token: '',
   },
   indexerNetwork: {
     port: '',
-    server: 'https://mainnet-algorand.api.purestake.io/idx2',
-    token: { 'x-api-key': process.env.NEXT_PUBLIC_PURESTAKE_API_KEY },
+    server: 'https://algoindexer.algoexplorerapi.io',
+    token: '',
   },
 };
 
@@ -23,42 +23,41 @@ export const networkSlice = createSlice({
       console.log('New network', action.payload);
       switch (action.payload) {
         case Network.MainNet:
-          state.name = Network.MainNet;
           state.algodNetwork = {
             port: '',
-            server: 'https://mainnet-algorand.api.purestake.io/ps2',
-            token: { 'x-api-key': process.env.NEXT_PUBLIC_PURESTAKE_API_KEY },
+            server: 'https://node.algoexplorerapi.io',
+            token: '',
           };
           state.indexerNetwork = {
             port: '',
-            server: 'https://mainnet-algorand.api.purestake.io/idx2',
-            token: { 'x-api-key': process.env.NEXT_PUBLIC_PURESTAKE_API_KEY },
+            server: 'https://algoindexer.algoexplorerapi.io',
+            token: '',
           };
           break;
         case Network.TestNet:
           state.name = Network.TestNet;
           state.algodNetwork = {
             port: '',
-            server: 'https://testnet-algorand.api.purestake.io/ps2',
-            token: { 'x-api-key': process.env.NEXT_PUBLIC_PURESTAKE_API_KEY },
+            server: 'https://node.testnet.algoexplorerapi.io',
+            token: '',
           };
           state.indexerNetwork = {
             port: '',
-            server: 'https://testnet-algorand.api.purestake.io/idx2',
-            token: { 'x-api-key': process.env.NEXT_PUBLIC_PURESTAKE_API_KEY },
+            server: 'https://algoindexer.testnet.algoexplorerapi.io',
+            token: '',
           };
           break;
         case Network.BetaNet:
           state.name = Network.BetaNet;
           state.algodNetwork = {
             port: '',
-            server: 'https://betanet-algorand.api.purestake.io/ps2',
-            token: { 'x-api-key': process.env.NEXT_PUBLIC_PURESTAKE_API_KEY },
+            server: 'https://node.betanet.algoexplorerapi.io',
+            token: '',
           };
           state.indexerNetwork = {
             port: '',
-            server: 'https://betanet-algorand.api.purestake.io/idx2',
-            token: { 'x-api-key': process.env.NEXT_PUBLIC_PURESTAKE_API_KEY },
+            server: 'https://algoindexer.betanet.algoexplorerapi.io',
+            token: '',
           };
           break;
         case Network.Sandbox:

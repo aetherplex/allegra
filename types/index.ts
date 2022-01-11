@@ -113,10 +113,12 @@ export interface IFormValues {
   applicationID?: number;
 }
 
-export type Token = {
-  'x-key'?: string;
-  'x-api-key'?: string;
-};
+export type Token =
+  | {
+      'x-key'?: string;
+      'x-api-key'?: string;
+    }
+  | string;
 
 export enum Network {
   MainNet = 'mainnet',
