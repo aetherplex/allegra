@@ -39,7 +39,7 @@ function Search() {
 
   const network = useSelector(selectNetwork);
 
-  const { boxShadowSmInset, boxShadowSm } = useBoxShadow();
+  const { boxShadowXsInset, boxShadowSm } = useBoxShadow();
 
   const type = watch('type', 'Asset');
 
@@ -141,6 +141,7 @@ function Search() {
             rewards={searchData?.data?.account?.['rewards']}
             sigType={searchData?.data?.account?.['sig-type']}
             status={searchData?.data?.account?.status}
+            apps={searchData?.data?.account?.['apps-local-state']}
           />
         );
       case 'transaction':
@@ -223,11 +224,13 @@ function Search() {
               w="100%"
               type={type}
               {...register('searchValue', { required: true })}
-              boxShadow={boxShadowSmInset}
+              boxShadow={boxShadowXsInset}
               border="none"
               bgColor={bgColor}
+              fontFamily="mono"
             />
             <Select
+              fontFamily="mono"
               boxShadow={boxShadowSm}
               border="none"
               w="25%"

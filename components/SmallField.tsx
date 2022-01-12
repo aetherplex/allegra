@@ -7,7 +7,7 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import React from 'react';
-import { BiClipboard } from 'react-icons/bi';
+import { BiClipboard, BiSearch } from 'react-icons/bi';
 import { useBoxShadow } from '../hooks/useBoxShadow';
 import { shortenAddress } from '../utils/helpers';
 
@@ -22,11 +22,11 @@ function SmallField({ label, value, canCopy }: ISmallFieldProps) {
   const { colorMode } = useColorMode();
   const bgColor = colorMode === 'light' ? 'gray.100' : 'gray.800';
   const { boxShadowXs } = useBoxShadow();
-  const copyAddress = (address: string) => {
-    navigator.clipboard.writeText(address);
+  const copy = (value: string) => {
+    navigator.clipboard.writeText(value);
     toast({
       title: 'Copied to clipboard',
-      description: shortenAddress(address),
+      description: value.length > 10 ? shortenAddress(value) : value,
       status: 'success',
       duration: 2000,
     });
@@ -37,14 +37,14 @@ function SmallField({ label, value, canCopy }: ISmallFieldProps) {
         {label}
       </Text>
       <HStack>
-        <Text>{value === undefined ? '-' : value}</Text>
+        <Text fontFamily="mono">{value === undefined ? '-' : value}</Text>
         {canCopy && value && (
           <IconButton
             boxShadow={boxShadowXs}
             size="xs"
             bgColor={bgColor}
             aria-label="Copy address to clipboard"
-            onClick={() => copyAddress(value?.toString())}
+            onClick={() => copy(value?.toString())}
             icon={<BiClipboard />}
           />
         )}

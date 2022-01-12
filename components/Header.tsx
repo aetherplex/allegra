@@ -116,6 +116,7 @@ function Header() {
               border="none"
               onChange={(e) => changeAddress(e.target.value)}
               boxShadow={boxShadowXs}
+              fontFamily="mono"
             >
               {addresses?.map((address: any) => (
                 <option key={address} value={address}>
@@ -135,6 +136,7 @@ function Header() {
           onChange={(e) => changeNetwork(e.target.value)}
           boxShadow={boxShadowXs}
           border="none"
+          fontFamily="mono"
         >
           <option value="mainnet">MainNet</option>
           <option value="testnet">TestNet</option>

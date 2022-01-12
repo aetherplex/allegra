@@ -46,7 +46,7 @@ function DataField({ label, value, canCopy }: IDataFieldProps) {
         {label}
       </Text>
 
-      <Text fontSize="2xl" fontWeight="bold">
+      <Text fontSize="2xl" fontWeight="bold" fontFamily="mono">
         {value || '-'}
       </Text>
       {canCopy && value && (
