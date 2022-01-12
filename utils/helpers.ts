@@ -3,6 +3,9 @@ import type { RootState, AppDispatch } from '../store';
 // Use throughout your app instead of plain `useDispatch` and `useSelector`
 export const useAppDispatch = () => useDispatch<AppDispatch>();
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+import sha256 from 'crypto-js/sha256';
+import hmacSHA512 from 'crypto-js/hmac-sha512';
+import Base64 from 'crypto-js/enc-base64';
 
 export function camelize(str: string) {
   return str
@@ -18,13 +21,10 @@ export const shortenAddress = (str: string, maxLength = 6): string =>
     str.length
   )}`;
 
-export async function generateHash(value: string) {
-  const crypto = window.crypto;
-  const buffer = str2ab(value);
-  const hash_bytes = await crypto.subtle.digest('SHA-1', buffer);
-  return [...new Uint8Array(hash_bytes)]
-    .map((x) => x.toString(16).padStart(2, '0'))
-    .join('');
+export function generateHash(value: string): Uint8Array {
+  const hash = sha256(value);
+  const buffer = Buffer.from(hash.toString(), 'hex');
+  return new Uint8Array(buffer);
 }
 
 // https://stackoverflow.com/a/11058858

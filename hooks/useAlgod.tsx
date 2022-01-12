@@ -77,20 +77,18 @@ export const useAlgod = () => {
     await verboseWaitForConfirmation(res.txId, setMessages, client);
   };
 
-  const prepareData = async (
-    suggestedParams: IFormValues,
-    note?: string,
-    metadata?: string
-  ) => {
+  const prepareData = async (note?: string, metadata?: string) => {
     const encoder = new TextEncoder();
 
     const noteBytes = new Uint8Array(Buffer.from(encoder.encode(note)));
-    let metadataBytes = '';
+    let metadataBytes: Uint8Array | string = '';
     if (metadata) {
-      metadataBytes = await generateHash(metadata);
+      metadataBytes = generateHash(metadata);
     }
+
+    const params = await client?.getTransactionParams().do();
     return {
-      params: suggestedParams,
+      params,
       noteBytes,
       metadataBytes,
     };
@@ -144,10 +142,7 @@ export const useAlgod = () => {
     rekeyTo,
     ...suggestedParams
   }: IFormValues) => {
-    const { params, noteBytes } = await prepareData(
-      suggestedParams as IFormValues,
-      note
-    );
+    const { params, noteBytes } = await prepareData(note);
     const txn = makePaymentTxnWithSuggestedParamsFromObject({
       from: sender,
       to: receiver!,
@@ -186,7 +181,6 @@ export const useAlgod = () => {
     ...suggestedParams
   }: IFormValues) => {
     const { params, noteBytes, metadataBytes } = await prepareData(
-      suggestedParams as IFormValues,
       note,
       metaDataHash
     );
@@ -220,10 +214,7 @@ export const useAlgod = () => {
     note,
     ...suggestedParams
   }: IFormValues) => {
-    const { params, noteBytes } = await prepareData(
-      suggestedParams as IFormValues,
-      note
-    );
+    const { params, noteBytes } = await prepareData(note);
     const txn = makeAssetConfigTxnWithSuggestedParamsFromObject({
       from: sender,
       assetIndex: parseInt(assetID!.toString()),
@@ -247,10 +238,7 @@ export const useAlgod = () => {
     closeRemainderTo,
     ...suggestedParams
   }: IFormValues) => {
-    const { params, noteBytes } = await prepareData(
-      suggestedParams as IFormValues,
-      note
-    );
+    const { params, noteBytes } = await prepareData(note);
     const txn = makeAssetTransferTxnWithSuggestedParamsFromObject({
       from: sender,
       to: receiver!,
@@ -269,10 +257,7 @@ export const useAlgod = () => {
     note,
     ...suggestedParams
   }: IFormValues) => {
-    const { params, noteBytes } = await prepareData(
-      suggestedParams as IFormValues,
-      note
-    );
+    const { params, noteBytes } = await prepareData(note);
     const txn = makeAssetTransferTxnWithSuggestedParamsFromObject({
       from: sender,
       to: sender!,
@@ -292,10 +277,7 @@ export const useAlgod = () => {
     receiver,
     ...suggestedParams
   }: IFormValues) => {
-    const { params, noteBytes } = await prepareData(
-      suggestedParams as IFormValues,
-      note
-    );
+    const { params, noteBytes } = await prepareData(note);
 
     const txn = makeAssetTransferTxnWithSuggestedParamsFromObject({
       from: sender,
@@ -317,10 +299,7 @@ export const useAlgod = () => {
     assetFrozen,
     ...suggestedParams
   }: IFormValues) => {
-    const { params, noteBytes } = await prepareData(
-      suggestedParams as IFormValues,
-      note
-    );
+    const { params, noteBytes } = await prepareData(note);
 
     const txn = makeAssetFreezeTxnWithSuggestedParamsFromObject({
       from: sender,
@@ -351,10 +330,7 @@ export const useAlgod = () => {
     note,
     ...suggestedParams
   }: IFormValues) => {
-    const { params, noteBytes } = await prepareData(
-      suggestedParams as IFormValues,
-      note
-    );
+    const { params, noteBytes } = await prepareData(note);
 
     const { approvalBytes, clearStateBytes } = await preparePrograms(
       approvalProgram,
@@ -394,10 +370,7 @@ export const useAlgod = () => {
     appArguments,
     ...suggestedParams
   }: IFormValues) => {
-    const { params, noteBytes } = await prepareData(
-      suggestedParams as IFormValues,
-      note
-    );
+    const { params, noteBytes } = await prepareData(note);
 
     const appArgs = prepareApplicationArgs(appArguments!);
 

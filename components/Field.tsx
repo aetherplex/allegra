@@ -92,7 +92,7 @@ function Field({
       return <MultiInput register={register} name={name} />;
     }
     if (type === 'bool') {
-      return <Switch {...register(camelize(name), { required })} />;
+      return <Switch {...register(camelize(name))} />;
     }
     if (name === 'Approval Program' || name === 'Clear State Program') {
       return (

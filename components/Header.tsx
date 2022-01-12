@@ -32,34 +32,40 @@ function Header() {
   const activeAddress = useSelector(selectActiveAddress);
   const addresses = useSelector(selectAddresses);
   const { boxShadowXs, boxShadowXsInset } = useBoxShadow();
+  const [localNetwork, setLocalNetwork] = useState('mainnet');
 
-  const connectWallet = async () => {
-    await AlgoSigner.connect();
+  const fetchAddresses = async (netwk: any) => {
     const acnts = await AlgoSigner.accounts({
-      ledger: networks[`${network.name}`],
+      // @ts-ignore
+      ledger: networks[netwk],
     });
     const addresses = acnts.map((account: any) => account.address);
     dispatch(setAddresses(addresses));
   };
 
+  const connectWallet = async () => {
+    await AlgoSigner.connect();
+    await fetchAddresses(localNetwork);
+  };
+
   const changeNetwork = async (value: any) => {
-    if (value !== network.name) {
-      try {
-        await dispatch(setNetwork(value));
-        toast({
-          title: 'Network changed',
-          description: `You are now connected to ${value}`,
-          status: 'success',
-          duration: 3000,
-        });
-      } catch (e: any) {
-        toast({
-          title: 'Error',
-          description: e.message,
-          status: 'error',
-          duration: 5000,
-        });
-      }
+    setLocalNetwork(value);
+    try {
+      await dispatch(setNetwork(value));
+      await fetchAddresses(value);
+      toast({
+        title: 'Network changed',
+        description: `You are now connected to ${value}`,
+        status: 'success',
+        duration: 3000,
+      });
+    } catch (e: any) {
+      toast({
+        title: 'Error',
+        description: e.message,
+        status: 'error',
+        duration: 5000,
+      });
     }
   };
 
