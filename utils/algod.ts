@@ -1,4 +1,4 @@
-import { Algodv2 } from 'algosdk';
+import { Algodv2, Indexer } from 'algosdk';
 import { Dispatch, SetStateAction } from 'react';
 
 /**
@@ -30,12 +30,12 @@ export async function verboseWaitForConfirmation(
 async function waitForConfirmation(
   txId: string,
   timeout: number,
-  algodclient?: Algodv2
+  algodClient?: Algodv2
 ): Promise<Record<string, any>> {
-  if (algodclient == null || txId == null || timeout < 0) {
+  if (algodClient == null || txId == null || timeout < 0) {
     throw new Error('Bad arguments.');
   }
-  const status = await algodclient.status().do();
+  const status = await algodClient.status().do();
   if (typeof status === 'undefined')
     throw new Error('Unable to get node status');
   const startround = status['last-round'] + 1;
@@ -43,7 +43,7 @@ async function waitForConfirmation(
 
   /* eslint-disable no-await-in-loop */
   while (currentround < startround + timeout) {
-    const pendingInfo = await algodclient
+    const pendingInfo = await algodClient
       .pendingTransactionInformation(txId)
       .do();
     if (pendingInfo !== undefined) {
@@ -65,7 +65,7 @@ async function waitForConfirmation(
         );
       }
     }
-    await algodclient.statusAfterBlock(currentround).do();
+    await algodClient.statusAfterBlock(currentround).do();
     currentround += 1;
   }
   /* eslint-enable no-await-in-loop */

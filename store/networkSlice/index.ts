@@ -1,12 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { INetwork, INetworkState, Network } from '../../types';
+import { INetwork, INetworkState, Network, Token } from '../../types';
 
 const initialState: INetworkState = {
   name: Network.MainNet,
   algodNetwork: {
     port: '',
-    server: 'https://node.algoexplorerapi.io/',
-    token: '',
+    server: 'https://mainnet-algorand.api.purestake.io/ps2',
+    token: { 'x-api-key': process.env.NEXT_PUBLIC_PURESTAKE_API_KEY } as Token,
   },
   indexerNetwork: {
     port: '',
@@ -25,8 +25,10 @@ export const networkSlice = createSlice({
         case Network.MainNet:
           state.algodNetwork = {
             port: '',
-            server: 'https://node.algoexplorerapi.io',
-            token: '',
+            server: 'https://mainnet-algorand.api.purestake.io/ps2',
+            token: {
+              'x-api-key': process.env.NEXT_PUBLIC_PURESTAKE_API_KEY,
+            } as Token,
           };
           state.indexerNetwork = {
             port: '',
@@ -38,8 +40,10 @@ export const networkSlice = createSlice({
           state.name = Network.TestNet;
           state.algodNetwork = {
             port: '',
-            server: 'https://node.testnet.algoexplorerapi.io',
-            token: '',
+            server: 'https://testnet-algorand.api.purestake.io/ps2',
+            token: {
+              'x-api-key': process.env.NEXT_PUBLIC_PURESTAKE_API_KEY,
+            } as Token,
           };
           state.indexerNetwork = {
             port: '',
@@ -51,8 +55,10 @@ export const networkSlice = createSlice({
           state.name = Network.BetaNet;
           state.algodNetwork = {
             port: '',
-            server: 'https://node.betanet.algoexplorerapi.io',
-            token: '',
+            server: 'https://betanet-algorand.api.purestake.io/ps2',
+            token: {
+              'x-api-key': process.env.NEXT_PUBLIC_PURESTAKE_API_KEY,
+            } as Token,
           };
           state.indexerNetwork = {
             port: '',

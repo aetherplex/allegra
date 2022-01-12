@@ -39,8 +39,6 @@ function Search() {
 
   const type = watch('type', 'Asset');
 
-  const { client } = useAlgod();
-
   const toast = useToast();
 
   const search = async ({

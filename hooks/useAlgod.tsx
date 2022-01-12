@@ -1,6 +1,8 @@
 import {
   Algodv2,
+  Indexer,
   makeApplicationCreateTxnFromObject,
+  makeApplicationNoOpTxnFromObject,
   makeAssetConfigTxnWithSuggestedParamsFromObject,
   makeAssetCreateTxnWithSuggestedParamsFromObject,
   makeAssetFreezeTxnWithSuggestedParamsFromObject,
@@ -9,28 +11,34 @@ import {
   OnApplicationComplete,
   SuggestedParams,
   Transaction,
-  makeApplicationNoOpTxnFromObject,
 } from 'algosdk';
-import { useEffect, useReducer, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { selectNetwork } from '../store/networkSlice/selectors';
-import { IField, IFormValues, Network, Token } from '../types';
+import { IFormValues } from '../types';
 import { verboseWaitForConfirmation } from '../utils/algod';
-import { generateHash } from '../utils/helpers';
 declare const AlgoSigner: any;
 
 export const useAlgod = () => {
   const network = useSelector(selectNetwork);
   const [messages, setMessages] = useState<string[]>(['']);
 
-  const [client, setClient] = useState<Algodv2>();
+  const [algodClient, setAlgodClient] = useState<Algodv2>();
+  const [indexerClient, setIndexerClient] = useState<Indexer>();
 
   useEffect(() => {
-    setClient(
+    setAlgodClient(
       new Algodv2(
         network.algodNetwork.token,
         network.algodNetwork.server,
         network.algodNetwork.port
+      )
+    );
+    setIndexerClient(
+      new Indexer(
+        network.indexerNetwork.token,
+        network.indexerNetwork.server,
+        network.indexerNetwork.port
       )
     );
   }, [network]);
@@ -45,8 +53,10 @@ export const useAlgod = () => {
     approvalProgram: any,
     clearStateProgram: any
   ) => {
-    const compiledApprovalProgram = await client?.compile(approvalProgram).do();
-    const compiledClearStateProgram = await client
+    const compiledApprovalProgram = await algodClient
+      ?.compile(approvalProgram)
+      .do();
+    const compiledClearStateProgram = await algodClient
       ?.compile(clearStateProgram)
       .do();
 
@@ -72,25 +82,30 @@ export const useAlgod = () => {
       signedTxns[0].blob
     );
 
-    const res = await client?.sendRawTransaction(binarySignedTxn).do();
+    const res = await algodClient?.sendRawTransaction(binarySignedTxn).do();
 
-    await verboseWaitForConfirmation(res.txId, setMessages, client);
+    await verboseWaitForConfirmation(res.txId, setMessages, algodClient);
   };
 
-  const prepareData = async (note?: string, metadata?: string) => {
+  const prepareMetaData = async (metadata: string) => {
+    const metaDataBytes = new Uint8Array(Buffer.from(metadata, 'base64'));
+    const hashedMetaData = await window.crypto.subtle.digest(
+      'SHA-256',
+      metaDataBytes
+    );
+    console.log('Length: ', hashedMetaData.byteLength);
+    return new Uint8Array(hashedMetaData);
+  };
+
+  const prepareParams = async (note?: string) => {
     const encoder = new TextEncoder();
 
     const noteBytes = new Uint8Array(Buffer.from(encoder.encode(note)));
-    let metadataBytes: Uint8Array | string = '';
-    if (metadata) {
-      metadataBytes = generateHash(metadata);
-    }
 
-    const params = await client?.getTransactionParams().do();
+    const params = await algodClient?.getTransactionParams().do();
     return {
       params,
       noteBytes,
-      metadataBytes,
     };
   };
 
@@ -140,9 +155,8 @@ export const useAlgod = () => {
     amount,
     closeRemainderTo,
     rekeyTo,
-    ...suggestedParams
   }: IFormValues) => {
-    const { params, noteBytes } = await prepareData(note);
+    const { params, noteBytes } = await prepareParams(note);
     const txn = makePaymentTxnWithSuggestedParamsFromObject({
       from: sender,
       to: receiver!,
@@ -150,6 +164,7 @@ export const useAlgod = () => {
       amount: parseInt(amount!.toString()),
       suggestedParams: params as SuggestedParams,
     });
+    console.log('TXN: ' + txn);
     await sendTransaction(txn);
   };
 
@@ -160,7 +175,6 @@ export const useAlgod = () => {
     amount,
     closeRemainderTo,
     rekeyTo,
-    ...suggestedParams
   }: IFormValues) => {};
 
   const sendAssetCreationTransaction = async ({
@@ -178,17 +192,15 @@ export const useAlgod = () => {
     clawbackAddr,
     note,
     rekeyTo,
-    ...suggestedParams
   }: IFormValues) => {
-    const { params, noteBytes, metadataBytes } = await prepareData(
-      note,
-      metaDataHash
-    );
+    const { params, noteBytes } = await prepareParams(note);
+    const hashedMetaData = await prepareMetaData(metaDataHash || '');
+
     console.log('URL: ', url);
     const txn = makeAssetCreateTxnWithSuggestedParamsFromObject({
       from: sender,
       note: noteBytes,
-      assetMetadataHash: metadataBytes,
+      assetMetadataHash: hashedMetaData,
       unitName,
       assetName,
       assetURL: url,
@@ -212,9 +224,8 @@ export const useAlgod = () => {
     freezeAddr,
     clawbackAddr,
     note,
-    ...suggestedParams
   }: IFormValues) => {
-    const { params, noteBytes } = await prepareData(note);
+    const { params, noteBytes } = await prepareParams(note);
     const txn = makeAssetConfigTxnWithSuggestedParamsFromObject({
       from: sender,
       assetIndex: parseInt(assetID!.toString()),
@@ -236,9 +247,8 @@ export const useAlgod = () => {
     amount,
     note,
     closeRemainderTo,
-    ...suggestedParams
   }: IFormValues) => {
-    const { params, noteBytes } = await prepareData(note);
+    const { params, noteBytes } = await prepareParams(note);
     const txn = makeAssetTransferTxnWithSuggestedParamsFromObject({
       from: sender,
       to: receiver!,
@@ -255,9 +265,8 @@ export const useAlgod = () => {
     assetID,
     sender,
     note,
-    ...suggestedParams
   }: IFormValues) => {
-    const { params, noteBytes } = await prepareData(note);
+    const { params, noteBytes } = await prepareParams(note);
     const txn = makeAssetTransferTxnWithSuggestedParamsFromObject({
       from: sender,
       to: sender!,
@@ -275,9 +284,8 @@ export const useAlgod = () => {
     note,
     amount,
     receiver,
-    ...suggestedParams
   }: IFormValues) => {
-    const { params, noteBytes } = await prepareData(note);
+    const { params, noteBytes } = await prepareParams(note);
 
     const txn = makeAssetTransferTxnWithSuggestedParamsFromObject({
       from: sender,
@@ -297,9 +305,8 @@ export const useAlgod = () => {
     receiver,
     note,
     assetFrozen,
-    ...suggestedParams
   }: IFormValues) => {
-    const { params, noteBytes } = await prepareData(note);
+    const { params, noteBytes } = await prepareParams(note);
 
     const txn = makeAssetFreezeTxnWithSuggestedParamsFromObject({
       from: sender,
@@ -328,9 +335,8 @@ export const useAlgod = () => {
     localNumInts,
     localNumByteSlices,
     note,
-    ...suggestedParams
   }: IFormValues) => {
-    const { params, noteBytes } = await prepareData(note);
+    const { params, noteBytes } = await prepareParams(note);
 
     const { approvalBytes, clearStateBytes } = await preparePrograms(
       approvalProgram,
@@ -368,9 +374,8 @@ export const useAlgod = () => {
     foreignApps,
     note,
     appArguments,
-    ...suggestedParams
   }: IFormValues) => {
-    const { params, noteBytes } = await prepareData(note);
+    const { params, noteBytes } = await prepareParams(note);
 
     const appArgs = prepareApplicationArgs(appArguments!);
 
@@ -388,7 +393,8 @@ export const useAlgod = () => {
   };
 
   return {
-    client,
+    algodClient,
+    indexerClient,
     forwardTransaction,
     messages,
   };

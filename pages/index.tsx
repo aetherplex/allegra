@@ -44,12 +44,12 @@ function Home() {
 
   const toast = useToast();
 
-  const { client, forwardTransaction, messages } = useAlgod();
+  const { algodClient, forwardTransaction, messages } = useAlgod();
 
   const fetchParams = async () => {
     setIsFetching(true);
     try {
-      const params = await client?.getTransactionParams().do();
+      const params = await algodClient?.getTransactionParams().do();
       setSuggestedParams(params);
       setValue('fee', params?.fee);
       setValue('firstRound', params?.firstRound);
@@ -89,10 +89,10 @@ function Home() {
   };
 
   useEffect(() => {
-    if (client) {
+    if (algodClient) {
       fetchParams();
     }
-  }, [client]);
+  }, [algodClient]);
 
   useEffect(() => {
     // @ts-ignore
@@ -234,7 +234,13 @@ function Home() {
             boxShadow={boxShadowXsInset}
           >
             {messages?.map((message: string) => (
-              <Text key={message} color="white" fontSize="sm" mt={2}>
+              <Text
+                key={message}
+                color={colorMode === 'light' ? 'gray.900' : 'white'}
+                fontSize="xs"
+                mt={2}
+                fontFamily="mono"
+              >
                 {message}
               </Text>
             ))}
