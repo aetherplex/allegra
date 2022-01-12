@@ -24,6 +24,7 @@ import BlockInfo from '../components/BlockInfo';
 import TransactionInfo from '../components/TransactionInfo';
 import { searchTypes } from '../data/searchTypes';
 import { useAlgod } from '../hooks/useAlgod';
+import { useBoxShadow } from '../hooks/useBoxShadow';
 import { selectNetwork } from '../store/networkSlice/selectors';
 
 function Search() {
@@ -33,6 +34,8 @@ function Search() {
   const [searchData, setSearchData] = useState<any>();
 
   const network = useSelector(selectNetwork);
+
+  const { boxShadowSmInset, boxShadowSm } = useBoxShadow();
 
   const type = watch('type', 'Asset');
 
@@ -122,20 +125,20 @@ function Search() {
       case 'account':
         return (
           <AccountInfo
-            unitName={searchData?.data?.asset?.params?.['unit-name']}
-            assetName={searchData?.data?.asset?.params?.['name']}
-            assetID={searchData?.data?.asset?.index}
-            total={searchData?.data?.asset?.params?.total}
-            decimals={searchData?.data?.asset?.params?.decimals}
-            defaultFrozen={searchData?.data?.asset?.params?.[
-              'default-frozen'
-            ].toString()}
-            url={searchData?.data?.asset?.params?.url}
-            metaDataHash={searchData?.data?.asset?.params?.['metadata-hash']}
-            managerAddr={searchData?.data?.asset?.params?.manager}
-            reserveAddr={searchData?.data?.asset?.params?.reserve}
-            freezeAddr={searchData?.data?.asset?.params?.freeze}
-            clawbackAddr={searchData?.data?.asset?.params?.clawback}
+            address={searchData?.data?.account?.address}
+            amount={searchData?.data?.account?.amount}
+            amountWithoutPendingRewards={
+              searchData?.data?.account?.['amount-without-pending-rewards']
+            }
+            assets={searchData?.data?.account?.assets}
+            createdAssets={searchData?.data?.account?.['created-assets']}
+            createdAtRound={searchData?.data?.account?.['created-at-round']}
+            deleted={searchData?.data?.account?.deleted}
+            pendingRewards={searchData?.data?.account?.['pending-rewards']}
+            rewardBase={searchData?.data?.account?.['reward-base']}
+            rewards={searchData?.data?.account?.['rewards']}
+            sigType={searchData?.data?.account?.['sig-type']}
+            status={searchData?.data?.account?.status}
           />
         );
       case 'transaction':
@@ -213,13 +216,17 @@ function Search() {
         w="100%"
       >
         <Flex w="100%" mt={3}>
-          <HStack w="100%">
+          <HStack w="50%">
             <Input
               w="100%"
               type={type}
               {...register('searchValue', { required: true })}
+              boxShadow={boxShadowSmInset}
+              border="none"
             />
             <Select
+              boxShadow={boxShadowSm}
+              border="none"
               w="25%"
               cursor="pointer"
               {...register('type', { required: true })}
@@ -230,7 +237,12 @@ function Search() {
               <option value="transaction">Transaction</option>
               <option value="block">Block</option>
             </Select>
-            <Button w="20%" type="submit">
+            <Button
+              w="20%"
+              type="submit"
+              colorScheme="green"
+              boxShadow={boxShadowSm}
+            >
               Search
             </Button>
           </HStack>

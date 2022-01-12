@@ -9,6 +9,7 @@ import {
 } from '@chakra-ui/react';
 import React from 'react';
 import { BiClipboard } from 'react-icons/bi';
+import { useBoxShadow } from '../hooks/useBoxShadow';
 import { shortenAddress } from '../utils/helpers';
 
 interface IDataFieldProps {
@@ -19,6 +20,7 @@ interface IDataFieldProps {
 
 function DataField({ label, value, canCopy }: IDataFieldProps) {
   const { colorMode } = useColorMode();
+  const { boxShadowXs, boxShadowSmInset } = useBoxShadow();
   const toast = useToast();
   const copyAddress = (value: string) => {
     navigator.clipboard.writeText(value);
@@ -38,6 +40,7 @@ function DataField({ label, value, canCopy }: IDataFieldProps) {
       borderRadius="xl"
       spacing={0.1}
       position="relative"
+      boxShadow={boxShadowSmInset}
     >
       <Text fontSize="xs" color="gray.500">
         {label}
@@ -48,6 +51,7 @@ function DataField({ label, value, canCopy }: IDataFieldProps) {
       </Text>
       {canCopy && value && (
         <IconButton
+          boxShadow={boxShadowXs}
           position="absolute"
           size="xs"
           top={5}

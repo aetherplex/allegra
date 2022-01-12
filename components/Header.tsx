@@ -12,6 +12,7 @@ import React, { useEffect, useState } from 'react';
 import { BiClipboard } from 'react-icons/bi';
 import { useSelector } from 'react-redux';
 import { networks } from '../data/networks';
+import { useBoxShadow } from '../hooks/useBoxShadow';
 import { setActiveAddress, setAddresses } from '../store/authSlice';
 import {
   selectActiveAddress,
@@ -30,6 +31,7 @@ function Header() {
   const dispatch = useAppDispatch();
   const activeAddress = useSelector(selectActiveAddress);
   const addresses = useSelector(selectAddresses);
+  const { boxShadowXs, boxShadowXsInset } = useBoxShadow();
 
   const connectWallet = async () => {
     await AlgoSigner.connect();
@@ -97,10 +99,17 @@ function Header() {
               aria-label="Copy address"
               icon={<BiClipboard />}
               onClick={copyAddress}
+              variant="ghost"
+              boxShadow={boxShadowXs}
+              _hover={{
+                boxShadow: boxShadowXsInset,
+              }}
             />
             <Select
               cursor="pointer"
+              border="none"
               onChange={(e) => changeAddress(e.target.value)}
+              boxShadow={boxShadowXs}
             >
               {addresses?.map((address: any) => (
                 <option key={address} value={address}>
@@ -110,12 +119,16 @@ function Header() {
             </Select>
           </HStack>
         ) : (
-          <Button onClick={connectWallet}>Connect wallet</Button>
+          <Button onClick={connectWallet} colorScheme="green" variant="outline">
+            Connect wallet
+          </Button>
         )}
         <Select
           w="auto"
           cursor="pointer"
           onChange={(e) => changeNetwork(e.target.value)}
+          boxShadow={boxShadowXs}
+          border="none"
         >
           <option value="mainnet">MainNet</option>
           <option value="testnet">TestNet</option>
@@ -123,7 +136,12 @@ function Header() {
           <option value="sandbox">Sandbox</option>
         </Select>
         <IconButton
+          variant="ghost"
           onClick={toggleColorMode}
+          boxShadow={boxShadowXs}
+          _hover={{
+            boxShadow: boxShadowXsInset,
+          }}
           aria-label="toggle dark mode"
           icon={colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
         />

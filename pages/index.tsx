@@ -23,6 +23,7 @@ import Field from '../components/Field';
 import { commonFields } from '../data/commonFields';
 import { transactionTypes } from '../data/transactionTypes';
 import { useAlgod } from '../hooks/useAlgod';
+import { useBoxShadow } from '../hooks/useBoxShadow';
 import { selectActiveAddress } from '../store/authSlice/selectors';
 import { IField, IFormValues, TransactionType } from '../types';
 import { camelize } from '../utils/helpers';
@@ -39,6 +40,7 @@ function Home() {
   const address = useSelector(selectActiveAddress);
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const { colorMode } = useColorMode();
+  const { boxShadowXs, boxShadowXsInset } = useBoxShadow();
 
   const toast = useToast();
 
@@ -117,7 +119,12 @@ function Home() {
         <Stack spacing={6} w="100%">
           <Stack mt={6}>
             <Text fontSize="xs">Transaction type</Text>
-            <Select cursor="pointer" {...register('type')}>
+            <Select
+              cursor="pointer"
+              {...register('type')}
+              boxShadow={boxShadowXs}
+              border="none"
+            >
               {transactionTypes.map((type) => (
                 <option key={type.type + '_' + type.name} value={type.name}>
                   {type.name}
@@ -224,6 +231,7 @@ function Home() {
             bgColor={colorMode === 'light' ? 'gray.100' : 'gray.900'}
             borderRadius="lg"
             p={4}
+            boxShadow={boxShadowXsInset}
           >
             {messages?.map((message: string) => (
               <Text key={message} color="white" fontSize="sm" mt={2}>

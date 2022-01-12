@@ -33,6 +33,7 @@ import { camelize } from '../utils/helpers';
 import FileUpload from './FileUpload';
 import MultiInput from './MultiInput';
 import { FiFile } from 'react-icons/fi';
+import { useBoxShadow } from '../hooks/useBoxShadow';
 
 interface FieldProps {
   name: string;
@@ -60,6 +61,8 @@ function Field({
   const [numInputs, setNumInputs] = useState(1);
   const { inputType } = useField({ name, type, description, required, codec });
 
+  const { boxShadowXsInset, boxShadowXs } = useBoxShadow();
+
   const renderInput = () => {
     if (name === 'OnComplete') {
       setValue('onComplete', 'NoOp');
@@ -68,6 +71,8 @@ function Field({
           size="sm"
           cursor="pointer"
           {...register(camelize(name), { required })}
+          boxShadow={boxShadowXs}
+          border="none"
         >
           <option value="NoOp">NoOp</option>
           <option value="OptIn">OptIn</option>
@@ -103,6 +108,8 @@ function Field({
         <Input
           size="sm"
           type={inputType}
+          border="none"
+          boxShadow={boxShadowXsInset}
           {...register(name.toLowerCase(), { required })}
         />
       );
@@ -111,6 +118,8 @@ function Field({
       <Input
         size="sm"
         type={inputType}
+        border="none"
+        boxShadow={boxShadowXsInset}
         {...register(camelize(name), { required })}
       />
     );

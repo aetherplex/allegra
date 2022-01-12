@@ -24,7 +24,7 @@ import { setNetwork } from '../store/networkSlice';
 
 function Sidebar() {
   const { colorMode, toggleColorMode } = useColorMode();
-  const bgColor = colorMode === 'light' ? 'gray.100' : 'gray.900';
+  const bgColor = colorMode === 'light' ? 'white' : 'gray.900';
   const router = useRouter();
   const dispatch = useAppDispatch();
   const network = useSelector(selectNetwork);

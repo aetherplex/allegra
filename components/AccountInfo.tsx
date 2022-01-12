@@ -8,22 +8,45 @@ import {
   useColorMode,
 } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
+import { useBoxShadow } from '../hooks/useBoxShadow';
 import { IFormValues } from '../types';
 import DataField from './DataField';
 import SmallField from './SmallField';
 
-function AccountInfo(data: Partial<IFormValues>) {
+function AccountInfo({
+  address,
+  amount,
+  amountWithoutPendingRewards,
+  assets,
+  createdAssets,
+  createdAtRound,
+  deleted,
+  pendingRewards,
+  rewardBase,
+  rewards,
+  sigType,
+  status,
+}: any) {
   const { colorMode } = useColorMode();
 
-  const bgColor = colorMode === 'light' ? 'gray.100' : 'gray.700';
+  const { boxShadowSmInset } = useBoxShadow();
 
-  useEffect(() => {
-    console.log('DATA: ', data);
-  }, []);
+  const bgColor = colorMode === 'light' ? 'gray.100' : 'gray.800';
 
   const renderInfo = () => (
-    <Flex w="100%" mt={6} flexDir="column">
-      {/* <DataField label="Address" value={data.} /> */}
+    <Flex
+      w="100%"
+      mt={6}
+      flexDir="column"
+      p={5}
+      borderRadius="xl"
+      bgColor={bgColor}
+      boxShadow={boxShadowSmInset}
+    >
+      <Stack>
+        <SmallField label="Address" value={address} canCopy />
+        <SmallField label="Balance" value={amount} />
+      </Stack>
     </Flex>
   );
 
@@ -42,7 +65,7 @@ function AccountInfo(data: Partial<IFormValues>) {
   return (
     <Flex flexDir="column" w="100%" flexGrow={1}>
       <Heading fontSize="xl">Account information</Heading>
-      {data ? renderInfo() : renderEmpty()}
+      {address ? renderInfo() : renderEmpty()}
     </Flex>
   );
 }
