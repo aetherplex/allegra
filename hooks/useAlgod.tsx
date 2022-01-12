@@ -397,5 +397,6 @@ export const useAlgod = () => {
     indexerClient,
     forwardTransaction,
     messages,
+    setMessages,
   };
 };

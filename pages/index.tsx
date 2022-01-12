@@ -1,5 +1,6 @@
 import {
   Button,
+  chakra,
   Checkbox,
   Flex,
   Grid,
@@ -41,10 +42,10 @@ function Home() {
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const { colorMode } = useColorMode();
   const { boxShadowXs, boxShadowXsInset } = useBoxShadow();
-
+  const bgColor = colorMode === 'light' ? 'gray.100' : 'gray.800';
   const toast = useToast();
 
-  const { algodClient, forwardTransaction, messages } = useAlgod();
+  const { algodClient, forwardTransaction, messages, setMessages } = useAlgod();
 
   const fetchParams = async () => {
     setIsFetching(true);
@@ -115,7 +116,7 @@ function Home() {
 
   const render = () => (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Grid gridTemplateColumns="repeat(3, 1fr)" gap={6} w="100%">
+      <Grid gridTemplateColumns="3fr 3fr 4fr" gap={6} w="100%">
         <Stack spacing={6} w="100%">
           <Stack mt={6}>
             <Text fontSize="xs">Transaction type</Text>
@@ -220,17 +221,29 @@ function Home() {
             type="submit"
             isLoading={isLoading}
             colorScheme="green"
+            onClick={() => setMessages([])}
           >{`Send ${transactionType} transaction`}</Button>
-          <Heading fontSize="xl" pt={4}>
-            Ouput log
-          </Heading>
-          <Flex
+          <Flex w="100%" alignItems="flex-end" justifyContent="space-between">
+            <Heading fontSize="xl" pt={4}>
+              Ouput log
+            </Heading>
+            <Button
+              size="xs"
+              boxShadow={boxShadowXs}
+              bgColor={bgColor}
+              onClick={() => setMessages([])}
+            >
+              Clear log
+            </Button>
+          </Flex>
+          <chakra.pre
+            display="flex"
             w="100%"
             flexDir="column"
-            minH="30%"
             bgColor={colorMode === 'light' ? 'gray.100' : 'gray.900'}
             borderRadius="lg"
-            p={4}
+            p={3}
+            h="60%"
             boxShadow={boxShadowXsInset}
           >
             {messages?.map((message: string) => (
@@ -244,7 +257,7 @@ function Home() {
                 {message}
               </Text>
             ))}
-          </Flex>
+          </chakra.pre>
         </Stack>
       </Grid>
     </form>

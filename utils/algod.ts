@@ -1,4 +1,5 @@
-import { Algodv2, Indexer } from 'algosdk';
+import { Algodv2, Indexer, Transaction } from 'algosdk';
+import PaymentTransaction from 'algosdk/dist/types/src/types/transactions/payment';
 import { Dispatch, SetStateAction } from 'react';
 
 /**
@@ -14,9 +15,14 @@ export async function verboseWaitForConfirmation(
 ): Promise<Record<string, any>> {
   setMessage(['Awaiting confirmation (this will take several seconds)...']);
   const roundTimeout = 2;
-  setMessage((prev) => [...prev, 'Transaction ID: ' + txnId]);
+  setMessage((prev) => [...prev, `Transaction ID:  \n${txnId}`]);
   const completedTx = await waitForConfirmation(txnId, roundTimeout, client);
-  setMessage((prev) => [...prev, 'Transaction successful.']);
+  console.log('Completed transaction: ', completedTx);
+
+  setMessage((prev) => [
+    ...prev,
+    `✨ Transaction confirmed in round ${completedTx['confirmed-round']} `,
+  ]);
   return completedTx;
 }
 

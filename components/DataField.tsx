@@ -31,7 +31,7 @@ function DataField({ label, value, canCopy }: IDataFieldProps) {
       duration: 2000,
     });
   };
-  const bgColor = colorMode === 'light' ? 'gray.100' : 'gray.700';
+  const bgColor = colorMode === 'light' ? 'gray.100' : 'gray.800';
   return (
     <Stack
       w="100%"
