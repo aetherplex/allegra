@@ -6,88 +6,115 @@ import {
   Stack,
   HStack,
   useColorMode,
+  Divider,
+  IconButton,
+  useToast,
 } from '@chakra-ui/react';
+import { Base64 } from 'js-base64';
 import React from 'react';
+import { BiClipboard } from 'react-icons/bi';
+import { useAlgod } from '../hooks/useAlgod';
 import { IFormValues } from '../types';
+import { capitalize, shortenAddress } from '../utils/helpers';
 import DataField from './DataField';
 import SmallField from './SmallField';
 
 function ApplicationInfo({
-  assetID,
-  unitName,
-  assetName,
-  total,
-  decimals,
-  defaultFrozen,
-  url,
-  metaDataHash,
-  managerAddr,
-  reserveAddr,
-  freezeAddr,
-  clawbackAddr,
-}: Partial<IFormValues>) {
+  createdAtRound,
+  deleted,
+  id,
+  approvalProgram,
+  clearStateProgram,
+  creator,
+  globalState,
+  globalStateSchema,
+  localStateSchema,
+}: any) {
   const { colorMode } = useColorMode();
+
+  const { client } = useAlgod();
+
+  const toast = useToast();
 
   const bgColor = colorMode === 'light' ? 'gray.100' : 'gray.700';
 
   const renderInfo = () => (
     <Grid w="100%" gridTemplateColumns="repeat(3, 1fr)" gap={4} mt={6}>
-      <DataField label="Asset ID" value={assetID} />
-      <DataField label="Unit Name" value={unitName} />
-      <DataField label="Asset Name" value={assetName} />
-      <Flex
-        flexDir="column"
-        w="100%"
-        bgColor={bgColor}
-        borderRadius="xl"
-        p={4}
-        gridColumnStart={1}
-        gridColumnEnd={4}
-      >
-        <Heading size="md">Details</Heading>
-        <Grid gridTemplateColumns="repeat(3, 1fr)" gap={4}>
-          <SmallField label="Total supply" value={total} />
-          <SmallField label="Decimals" value={decimals} />
-          <SmallField label="Default Frozen" value={defaultFrozen} />
-        </Grid>
-        <Grid gridTemplateColumns="1fr 2fr" gap={4}>
-          <SmallField label="URL" value={url} />
-          <SmallField label="MetaDataHash" value={metaDataHash} />
-        </Grid>
-      </Flex>
+      <DataField label="App ID" value={id} canCopy />
+      <DataField label="Round created" value={createdAtRound} canCopy />
+      <DataField label="Deleted" value={capitalize(deleted.toString())} />
       <Stack
         w="100%"
-        bgColor={bgColor}
-        borderRadius="xl"
-        p={4}
         gridColumnStart={1}
         gridColumnEnd={4}
-        spacing={6}
+        p={5}
+        bgColor={bgColor}
+        spacing={4}
+        borderRadius="xl"
       >
-        <HStack>
-          <Text fontSize="sm" color="gray.500">
-            Manager address:
-          </Text>
-          <Text fontSize="sm">{managerAddr || '-'}</Text>
+        <Heading size="md">Details</Heading>
+        <HStack alignItems="center">
+          <SmallField label="Creator" value={creator} canCopy />
         </HStack>
-        <HStack>
-          <Text fontSize="sm" color="gray.500">
-            Reserve address:
-          </Text>
-          <Text fontSize="sm">{reserveAddr || '-'}</Text>
+        <Divider />
+        <HStack w="100%" spacing={12}>
+          <Stack w="100%">
+            <Text fontWeight="semibold" fontSize="lg">
+              Global state schema
+            </Text>
+            <HStack spacing={8}>
+              <SmallField
+                label="Number of bytes"
+                value={globalStateSchema['num-byte-slice']}
+              />
+              <SmallField
+                label="Number of uints"
+                value={globalStateSchema['num-uint']}
+              />
+            </HStack>
+          </Stack>
+          <Stack w="100%">
+            <Text fontWeight="semibold" fontSize="lg">
+              Local state schema
+            </Text>
+            <HStack spacing={8}>
+              <SmallField
+                label="Number of bytes"
+                value={localStateSchema['num-byte-slice']}
+              />
+              <SmallField
+                label="Number of uints"
+                value={localStateSchema['num-uint']}
+              />
+            </HStack>
+          </Stack>
         </HStack>
-        <HStack>
-          <Text fontSize="sm" color="gray.500">
-            Freeze address:
-          </Text>
-          <Text fontSize="sm">{freezeAddr || '-'}</Text>
-        </HStack>
-        <HStack>
-          <Text fontSize="sm" color="gray.500">
-            Clawback address:
-          </Text>
-          <Text fontSize="sm">{clawbackAddr || '-'}</Text>
-        </HStack>
+        <Divider />
+        <Stack w="100%" spacing={4}>
+          <Heading size="md">Global state</Heading>
+          <Grid gridTemplateColumns="repeat(2, 1fr)" gap={4}>
+            {globalState.map(
+              (state: {
+                key: string;
+                value: { bytes: string; type: number; uint: number };
+              }) => {
+                console.log('KEY, VAL: ', state.key, state.value);
+                const key = Base64.decode(state.key);
+
+                let value: any =
+                  state.value.type === 1 ? state.value.bytes : state.value.uint;
+
+                return (
+                  <SmallField
+                    label={key}
+                    value={value}
+                    key={`${key}-${value}`}
+                  />
+                );
+              }
+            )}
+          </Grid>
+        </Stack>
       </Stack>
     </Grid>
   );
@@ -105,9 +132,9 @@ function ApplicationInfo({
   );
 
   return (
-    <Flex flexDir="column" w="50%" flexGrow={1}>
+    <Flex flexDir="column" w="100%" flexGrow={1}>
       <Heading fontSize="xl">Application information</Heading>
-      {assetID ? renderInfo() : renderEmpty()}
+      {id ? renderInfo() : renderEmpty()}
     </Flex>
   );
 }

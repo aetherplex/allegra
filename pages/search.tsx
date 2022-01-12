@@ -49,6 +49,10 @@ function Search() {
   }) => {
     setIsLoading(true);
     try {
+      const headers =
+        typeof network.indexerNetwork.token === 'object'
+          ? { ...network.indexerNetwork.token }
+          : '';
       const data = await axios.get(
         `${
           network.name === 'sandbox'
@@ -57,7 +61,7 @@ function Search() {
         }/v2/${type.toLowerCase()}s/${searchValue}`,
         {
           headers: {
-            ...network.indexerNetwork.token,
+            ...headers,
           },
         }
       );
@@ -100,20 +104,19 @@ function Search() {
       case 'application':
         return (
           <ApplicationInfo
-            unitName={searchData?.data?.asset?.params?.['unit-name']}
-            assetName={searchData?.data?.asset?.params?.['name']}
-            assetID={searchData?.data?.asset?.index}
-            total={searchData?.data?.asset?.params?.total}
-            decimals={searchData?.data?.asset?.params?.decimals}
-            defaultFrozen={searchData?.data?.asset?.params?.[
-              'default-frozen'
-            ].toString()}
-            url={searchData?.data?.asset?.params?.url}
-            metaDataHash={searchData?.data?.asset?.params?.['metadata-hash']}
-            managerAddr={searchData?.data?.asset?.params?.manager}
-            reserveAddr={searchData?.data?.asset?.params?.reserve}
-            freezeAddr={searchData?.data?.asset?.params?.freeze}
-            clawbackAddr={searchData?.data?.asset?.params?.clawback}
+            id={searchData?.data?.application?.id}
+            deleted={searchData?.data?.application?.deleted}
+            createdAtRound={searchData?.data?.application['created-at-round']}
+            creator={searchData?.data?.application?.params?.creator}
+            globalState={
+              searchData?.data?.application?.params?.['global-state']
+            }
+            globalStateSchema={
+              searchData?.data?.application?.params?.['global-state-schema']
+            }
+            localStateSchema={
+              searchData?.data?.application?.params?.['local-state-schema']
+            }
           />
         );
       case 'account':
@@ -207,7 +210,7 @@ function Search() {
         display="flex"
         flexGrow={1}
         flexDir="column"
-        w="70%"
+        w="100%"
       >
         <Flex w="100%" mt={3}>
           <HStack w="100%">

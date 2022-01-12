@@ -36,3 +36,7 @@ function str2ab(str: string) {
   }
   return buf;
 }
+
+export function capitalize(str: string) {
+  return `${str.charAt(0).toUpperCase()}${str.slice(1)}`;
+}
