@@ -43,6 +43,7 @@ function Home() {
   const { colorMode } = useColorMode();
   const { boxShadowXs, boxShadowXsInset } = useBoxShadow();
   const bgColor = colorMode === 'light' ? 'gray.100' : 'gray.800';
+  const outputBgColor = colorMode === 'light' ? 'gray.50' : 'gray.900';
   const toast = useToast();
 
   const { algodClient, forwardTransaction, messages, setMessages } = useAlgod();
@@ -240,11 +241,11 @@ function Home() {
             display="flex"
             w="100%"
             flexDir="column"
-            bgColor={colorMode === 'light' ? 'gray.100' : 'gray.900'}
             borderRadius="lg"
             p={3}
             h="60%"
             boxShadow={boxShadowXsInset}
+            bgColor={outputBgColor}
           >
             {messages?.map((message: string) => (
               <Text

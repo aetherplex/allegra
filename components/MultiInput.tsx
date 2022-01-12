@@ -20,7 +20,8 @@ interface IMultiInputProps {
 function MultiInput({ register, name }: IMultiInputProps) {
   const [numInputs, setNumInputs] = useState(1);
   const { colorMode } = useColorMode();
-  const bgColor = colorMode === 'light' ? 'gray.100' : 'gray.800';
+  const buttonBgColor = colorMode === 'light' ? 'gray.100' : 'gray.800';
+  const bgColor = colorMode === 'light' ? 'gray.50' : 'gray.900';
   const { boxShadowXsInset, boxShadowXs } = useBoxShadow();
   return (
     <Flex alignItems="flex-start">
@@ -31,6 +32,7 @@ function MultiInput({ register, name }: IMultiInputProps) {
             size="sm"
             key={i}
             w="100%"
+            bgColor={bgColor}
             boxShadow={boxShadowXsInset}
             {...register(`${camelize(name)}-${i}`, { required: false })}
           />
@@ -42,7 +44,7 @@ function MultiInput({ register, name }: IMultiInputProps) {
           aria-label="add"
           icon={<AddIcon />}
           size="sm"
-          bgColor={bgColor}
+          bgColor={buttonBgColor}
           disabled={numInputs >= 8}
           boxShadow={boxShadowXs}
           onClick={() => setNumInputs((prev) => prev + 1)}
@@ -53,7 +55,7 @@ function MultiInput({ register, name }: IMultiInputProps) {
           icon={<MinusIcon />}
           size="sm"
           boxShadow={boxShadowXs}
-          bgColor={bgColor}
+          bgColor={buttonBgColor}
           disabled={numInputs === 1}
           onClick={() => setNumInputs((prev) => prev - 1)}
         />

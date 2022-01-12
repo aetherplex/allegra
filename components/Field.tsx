@@ -23,6 +23,7 @@ import {
   Stack,
   Switch,
   Text,
+  useColorMode,
 } from '@chakra-ui/react';
 import { SuggestedParams } from 'algosdk';
 import React, { useState } from 'react';
@@ -63,6 +64,10 @@ function Field({
 
   const { boxShadowXsInset, boxShadowXs } = useBoxShadow();
 
+  const { colorMode } = useColorMode();
+  const buttonBgColor = colorMode === 'light' ? 'gray.100' : 'gray.800';
+  const bgColor = colorMode === 'light' ? 'gray.50' : 'gray.900';
+
   const renderInput = () => {
     if (name === 'OnComplete') {
       setValue('onComplete', 'NoOp');
@@ -97,7 +102,12 @@ function Field({
     if (name === 'Approval Program' || name === 'Clear State Program') {
       return (
         <FileUpload register={register(camelize(name), { required })}>
-          <Button size="sm" leftIcon={<Icon as={FiFile} />}>
+          <Button
+            size="sm"
+            leftIcon={<Icon as={FiFile} />}
+            bgColor={buttonBgColor}
+            boxShadow={boxShadowXs}
+          >
             Upload
           </Button>
         </FileUpload>
@@ -111,6 +121,7 @@ function Field({
           border="none"
           boxShadow={boxShadowXsInset}
           {...register(name.toLowerCase(), { required })}
+          bgColor={bgColor}
         />
       );
     }
@@ -121,6 +132,7 @@ function Field({
         border="none"
         boxShadow={boxShadowXsInset}
         {...register(camelize(name), { required })}
+        bgColor={bgColor}
       />
     );
   };
