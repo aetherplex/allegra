@@ -33,6 +33,7 @@ function MultiInput({ register, name }: IMultiInputProps) {
             key={i}
             w="100%"
             bgColor={bgColor}
+            fontFamily="mono"
             boxShadow={boxShadowXsInset}
             {...register(`${camelize(name)}-${i}`, { required: false })}
           />
@@ -45,6 +46,7 @@ function MultiInput({ register, name }: IMultiInputProps) {
           icon={<AddIcon />}
           size="sm"
           bgColor={buttonBgColor}
+          fontFamily="mono"
           disabled={numInputs >= 8}
           boxShadow={boxShadowXs}
           onClick={() => setNumInputs((prev) => prev + 1)}
@@ -54,6 +56,7 @@ function MultiInput({ register, name }: IMultiInputProps) {
           aria-label="add"
           icon={<MinusIcon />}
           size="sm"
+          fontFamily="mono"
           boxShadow={boxShadowXs}
           bgColor={buttonBgColor}
           disabled={numInputs === 1}

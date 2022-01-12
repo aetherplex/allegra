@@ -126,6 +126,7 @@ function Home() {
               {...register('type')}
               boxShadow={boxShadowXs}
               border="none"
+              fontFamily="mono"
             >
               {transactionTypes.map((type) => (
                 <option key={type.type + '_' + type.name} value={type.name}>

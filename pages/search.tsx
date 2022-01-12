@@ -9,6 +9,7 @@ import {
   Select,
   Spinner,
   Text,
+  useColorMode,
   useToast,
 } from '@chakra-ui/react';
 import axios from 'axios';
@@ -30,6 +31,9 @@ import { selectNetwork } from '../store/networkSlice/selectors';
 function Search() {
   const { register, handleSubmit, watch } = useForm();
   const [isLoading, setIsLoading] = useState(false);
+  const { colorMode } = useColorMode();
+  const buttonBgColor = colorMode === 'light' ? 'gray.100' : 'gray.800';
+  const bgColor = colorMode === 'light' ? 'gray.50' : 'gray.900';
 
   const [searchData, setSearchData] = useState<any>();
 
@@ -221,6 +225,7 @@ function Search() {
               {...register('searchValue', { required: true })}
               boxShadow={boxShadowSmInset}
               border="none"
+              bgColor={bgColor}
             />
             <Select
               boxShadow={boxShadowSm}

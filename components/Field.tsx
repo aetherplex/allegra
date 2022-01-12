@@ -78,6 +78,7 @@ function Field({
           {...register(camelize(name), { required })}
           boxShadow={boxShadowXs}
           border="none"
+          fontFamily="mono"
         >
           <option value="NoOp">NoOp</option>
           <option value="OptIn">OptIn</option>
@@ -97,7 +98,7 @@ function Field({
       return <MultiInput register={register} name={name} />;
     }
     if (type === 'bool') {
-      return <Switch {...register(camelize(name))} />;
+      return <Switch {...register(camelize(name))} colorScheme="green" />;
     }
     if (name === 'Approval Program' || name === 'Clear State Program') {
       return (
@@ -122,6 +123,7 @@ function Field({
           boxShadow={boxShadowXsInset}
           {...register(name.toLowerCase(), { required })}
           bgColor={bgColor}
+          fontFamily="mono"
         />
       );
     }
@@ -133,6 +135,7 @@ function Field({
         boxShadow={boxShadowXsInset}
         {...register(camelize(name), { required })}
         bgColor={bgColor}
+        fontFamily="mono"
       />
     );
   };
