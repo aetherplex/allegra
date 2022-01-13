@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react';
 import axios from 'axios';
 import Head from 'next/head';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { BiSearch } from 'react-icons/bi';
 import { useSelector } from 'react-redux';
@@ -24,12 +24,11 @@ import AssetInfo from '../components/AssetInfo';
 import BlockInfo from '../components/BlockInfo';
 import TransactionInfo from '../components/TransactionInfo';
 import { searchTypes } from '../data/searchTypes';
-import { useAlgod } from '../hooks/useAlgod';
 import { useBoxShadow } from '../hooks/useBoxShadow';
 import { selectNetwork } from '../store/networkSlice/selectors';
 
 function Search() {
-  const { register, handleSubmit, watch } = useForm();
+  const { register, handleSubmit, watch, setValue } = useForm();
   const [isLoading, setIsLoading] = useState(false);
   const { colorMode } = useColorMode();
   const buttonBgColor = colorMode === 'light' ? 'gray.100' : 'gray.800';
@@ -44,6 +43,10 @@ function Search() {
   const type = watch('type', 'Asset');
 
   const toast = useToast();
+
+  useEffect(() => {
+    setSearchData(null);
+  }, [type]);
 
   const search = async ({
     type,
@@ -111,7 +114,7 @@ function Search() {
           <ApplicationInfo
             id={searchData?.data?.application?.id}
             deleted={searchData?.data?.application?.deleted}
-            createdAtRound={searchData?.data?.application['created-at-round']}
+            createdAtRound={searchData?.data?.application?.['created-at-round']}
             creator={searchData?.data?.application?.params?.creator}
             globalState={
               searchData?.data?.application?.params?.['global-state']
@@ -147,20 +150,31 @@ function Search() {
       case 'transaction':
         return (
           <TransactionInfo
-            unitName={searchData?.data?.asset?.params?.['unit-name']}
-            assetName={searchData?.data?.asset?.params?.['name']}
-            assetID={searchData?.data?.asset?.index}
-            total={searchData?.data?.asset?.params?.total}
-            decimals={searchData?.data?.asset?.params?.decimals}
-            defaultFrozen={searchData?.data?.asset?.params?.[
-              'default-frozen'
-            ].toString()}
-            url={searchData?.data?.asset?.params?.url}
-            metaDataHash={searchData?.data?.asset?.params?.['metadata-hash']}
-            managerAddr={searchData?.data?.asset?.params?.manager}
-            reserveAddr={searchData?.data?.asset?.params?.reserve}
-            freezeAddr={searchData?.data?.asset?.params?.freeze}
-            clawbackAddr={searchData?.data?.asset?.params?.clawback}
+            id={searchData?.data?.transaction?.id}
+            confirmedRound={searchData?.data?.transaction?.['confirmed-round']}
+            paymentTransaction={
+              searchData?.data?.transaction?.['payment-transaction']
+            }
+            applicationTransaction={
+              searchData?.data?.transaction?.['application-transaction']
+            }
+            sender={searchData?.data?.transaction?.['sender']}
+            transactionType={searchData?.data?.transaction?.['tx-type']}
+            fee={searchData?.data?.transaction?.['fee']}
+            note={searchData?.data?.transaction?.['note']}
+            assetTransferTransaction={
+              searchData?.data?.transaction?.['asset-transfer-transaction']
+            }
+            assetConfigTransaction={
+              searchData?.data?.transaction?.['asset-config-transaction']
+            }
+            roundTime={searchData?.data?.transaction?.['round-time']}
+            createdAssetIndex={
+              searchData?.data?.transaction?.['created-asset-index']
+            }
+            assetFreezeTransaction={
+              searchData?.data?.transaction?.['asset-freeze-transaction']
+            }
           />
         );
       case 'block':
@@ -209,7 +223,7 @@ function Search() {
       </HStack>
       <Text mt={4} fontSize="lg">
         {/* @ts-ignore */}
-        {`Search by ${type} ${searchTypes[type]}.`}
+        {`Search by ${type} ${searchTypes[type] || 'ID'}.`}
       </Text>
       <chakra.form
         onSubmit={handleSubmit(search)}
@@ -219,7 +233,7 @@ function Search() {
         w="100%"
       >
         <Flex w="100%" mt={3}>
-          <HStack w="50%">
+          <HStack w="60%">
             <Input
               w="100%"
               type={type}
@@ -233,7 +247,7 @@ function Search() {
               fontFamily="mono"
               boxShadow={boxShadowSm}
               border="none"
-              w="25%"
+              w="30%"
               cursor="pointer"
               {...register('type', { required: true })}
             >
