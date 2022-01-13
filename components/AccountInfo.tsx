@@ -91,7 +91,7 @@ function AccountInfo({
             <Heading size="sm" pt={4}>
               Assets
             </Heading>
-            {assets.map((asset, index) => (
+            {assets.map((asset: any, index: number) => (
               <>
                 {index > 0 && <Divider />}
                 <Grid gridTemplateColumns="repeat(4, 1fr)" gap={4} w="100%">
@@ -114,7 +114,7 @@ function AccountInfo({
         <Heading size="sm" pt={4}>
           Opted-in apps
         </Heading>
-        {apps.map((app, index) => (
+        {apps.map((app: any, index: number) => (
           <>
             {index > 0 && <Divider />}
             <Grid gridTemplateColumns="repeat(3, 1fr)" gap={4} w="100%">
