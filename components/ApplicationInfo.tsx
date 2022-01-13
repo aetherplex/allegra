@@ -1,21 +1,16 @@
 import {
+  Divider,
   Flex,
-  Text,
   Grid,
   Heading,
-  Stack,
   HStack,
+  Stack,
+  Text,
   useColorMode,
-  Divider,
-  IconButton,
-  useToast,
 } from '@chakra-ui/react';
 import { Base64 } from 'js-base64';
 import React from 'react';
-import { BiClipboard } from 'react-icons/bi';
-import { useAlgod } from '../hooks/useAlgod';
-import { IFormValues } from '../types';
-import { capitalize, shortenAddress } from '../utils/helpers';
+import { capitalize } from '../utils/helpers';
 import DataField from './DataField';
 import SmallField from './SmallField';
 
@@ -31,10 +26,6 @@ function ApplicationInfo({
   localStateSchema,
 }: any) {
   const { colorMode } = useColorMode();
-
-  const { client } = useAlgod();
-
-  const toast = useToast();
 
   const bgColor = colorMode === 'light' ? 'gray.100' : 'gray.700';
 
