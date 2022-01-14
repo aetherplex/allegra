@@ -37,8 +37,8 @@ function BlockInformation({
   const { boxShadowSmInset } = useBoxShadow();
 
   const renderInfo = () => (
-    <HStack spacing={16} alignItems="flex-start">
-      <Stack w="60%" spacing={4}>
+    <HStack spacing={4} alignItems="flex-start">
+      <Stack w="50%" spacing={4}>
         <Grid w="100%" gridTemplateColumns="repeat(3, 1fr)" gap={4} mt={6}>
           <DataField label="Round" value={round} canCopy />
           <DataField
@@ -65,8 +65,41 @@ function BlockInformation({
             canCopy
           />
         </Flex>
+        <Stack
+          boxShadow={boxShadowSmInset}
+          p={5}
+          borderRadius="lg"
+          bgColor={bgColor}
+        >
+          <Grid w="100%" gridTemplateColumns="repeat(2, 1fr)" gap={4}>
+            <SmallField label="Genesis hash" value={genesisHash} />
+            <SmallField label="Genesis ID" value={genesisId} />
+            <SmallField label="Seed" value={seed} />
+          </Grid>
+          <Divider pt={4} />
+          <Heading size="sm" pt={4}>
+            Rewards
+          </Heading>
+          <SmallField label="Fee sink" value={rewards['fee-sink']} />
+          <Grid w="100%" gridTemplateColumns="repeat(3, 1fr)" gap={4} mt={6}>
+            <SmallField
+              label="Rewards calculation round"
+              value={rewards['rewards-calculation-round']}
+            />
+            <SmallField
+              label="Rewards level"
+              value={rewards['rewards-level']}
+            />
+            <SmallField label="Rewards rate" value={rewards['rewards-rate']} />
+          </Grid>
+          <SmallField
+            label="Rewards pool"
+            value={rewards['rewards-pool']}
+            canCopy
+          />
+        </Stack>
       </Stack>
-      <Stack w="35%">
+      <Stack w="50%">
         <Heading size="md">Transaction IDs</Heading>
         <Flex
           flexDir="column"

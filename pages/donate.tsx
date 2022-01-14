@@ -21,7 +21,7 @@ function DonatePage() {
   const bgColor = colorMode === 'light' ? 'gray.50' : 'gray.900';
 
   return (
-    <Stack alignItems="flex-start">
+    <Stack w="100%" mt={{ base: 5, lg: 0 }}>
       <Head>
         <title>Donate | Allegory</title>
       </Head>
@@ -29,9 +29,9 @@ function DonatePage() {
         <Icon as={BiGift} w={7} h={7} />
         <Heading size="lg">Donate</Heading>
       </HStack>
-      <Stack pt={2} pb={4}>
+      <Stack pt={3} pb={6}>
         <Text>
-          Allegory was created and is maintained by a single dev (
+          Allegra was created and is maintained by a single dev (
           <Link
             href="https://twitter.com/daoarchitect"
             color="green.500"
@@ -42,8 +42,8 @@ function DonatePage() {
           ).
         </Text>
         <Text>
-          If you find this tool useful, please donate algos or ASAs to the
-          address below:
+          If you find this tool useful, please consider donating algos to
+          address below. Your generosity is appreciated.
         </Text>
       </Stack>
       <Flex

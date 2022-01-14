@@ -117,7 +117,11 @@ function Home() {
 
   const render = () => (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Grid gridTemplateColumns="3fr 3fr 4fr" gap={6} w="100%">
+      <Grid
+        gridTemplateColumns={{ base: '1fr', xl: '3fr 3fr 4fr' }}
+        gap={6}
+        w="100%"
+      >
         <Stack spacing={6} w="100%">
           <Stack mt={6}>
             <Text fontSize="xs">Transaction type</Text>
@@ -224,6 +228,7 @@ function Home() {
             isLoading={isLoading}
             colorScheme="green"
             onClick={() => setMessages([])}
+            minH="2.5rem"
           >{`Send ${transactionType} transaction`}</Button>
           <Flex w="100%" alignItems="flex-end" justifyContent="space-between">
             <Heading fontSize="xl" pt={4}>
@@ -278,7 +283,7 @@ function Home() {
   );
 
   return (
-    <Flex w="100%" flexDir="column" flexGrow={1}>
+    <Flex w="100%" flexDir="column" mt={{ base: 5, lg: 0 }} flexGrow={1}>
       <Head>
         <title>Create | Allegory</title>
       </Head>

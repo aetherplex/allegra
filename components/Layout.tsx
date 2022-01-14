@@ -1,4 +1,4 @@
-import { Flex, useColorMode } from '@chakra-ui/react';
+import { Flex, Text, useColorMode } from '@chakra-ui/react';
 import Head from 'next/head';
 import React from 'react';
 import { useBoxShadow } from '../hooks/useBoxShadow';
@@ -13,23 +13,35 @@ function Layout({ children }: { children: React.ReactNode }) {
 
   const { boxShadowSmInset } = useBoxShadow();
   return (
-    <Flex w="100%" minH="100vh">
-      <Head>
-        <link
-          rel="preload"
-          href="/MonoLisa-Regular.otf"
-          as="font"
-          crossOrigin=""
-        />
-      </Head>
-      <Sidebar />
-      <Flex w="100%" bgColor={bgColor} boxShadow={boxShadowSmInset}>
-        <Flex flexDir="column" mx="auto" w="95%">
-          <Header />
-          <Flex flexGrow={1} w="100%">
-            {children}
+    <Flex flexDir="column">
+      <Flex
+        py={1}
+        alignItems="center"
+        justifyContent="center"
+        bgColor="gray.500"
+      >
+        <Text fontSize="xs" color="white" fontWeight="semibold">
+          Allegra is currently in beta. Use at your own risk.
+        </Text>
+      </Flex>
+      <Flex w="100%" minH="100vh">
+        <Head>
+          <link
+            rel="preload"
+            href="/MonoLisa-Regular.otf"
+            as="font"
+            crossOrigin=""
+          />
+        </Head>
+        <Sidebar />
+        <Flex w="100%" bgColor={bgColor} boxShadow={boxShadowSmInset}>
+          <Flex flexDir="column" mx="auto" w="95%">
+            <Header />
+            <Flex flexGrow={1} w="100%">
+              {children}
+            </Flex>
+            <Footer />
           </Flex>
-          <Footer />
         </Flex>
       </Flex>
     </Flex>

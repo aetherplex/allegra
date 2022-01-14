@@ -211,7 +211,7 @@ function Search() {
   };
 
   return (
-    <Flex w="100%" flexDir="column">
+    <Flex w="100%" flexDir="column" mt={{ base: 5, lg: 0 }}>
       <Head>
         <title>Search | Allegory</title>
       </Head>
@@ -231,7 +231,7 @@ function Search() {
         w="100%"
       >
         <Flex w="100%" mt={3}>
-          <HStack w="60%">
+          <HStack w={{ base: '100%', lg: '60%' }}>
             <Input
               w="100%"
               type={type}

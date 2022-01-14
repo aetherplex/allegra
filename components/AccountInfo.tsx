@@ -52,7 +52,7 @@ function AccountInfo({
 
   const renderInfo = () => (
     <Flex
-      w="50%"
+      w="60%"
       mt={6}
       flexDir="column"
       p={5}
@@ -86,12 +86,12 @@ function AccountInfo({
           <SmallField label="Rewards" value={rewards} />
           <SmallField label="Signature type" value={signatureType} />
         </Grid>
-        {assets.length && (
+        {assets?.length && (
           <>
             <Heading size="sm" pt={4}>
               Assets
             </Heading>
-            {assets.map((asset: any, index: number) => (
+            {assets?.map((asset: any, index: number) => (
               <>
                 {index > 0 && <Divider />}
                 <Grid gridTemplateColumns="repeat(4, 1fr)" gap={4} w="100%">
@@ -111,22 +111,29 @@ function AccountInfo({
           </>
         )}
 
-        <Heading size="sm" pt={4}>
-          Opted-in apps
-        </Heading>
-        {apps.map((app: any, index: number) => (
+        {apps?.length && (
           <>
-            {index > 0 && <Divider />}
-            <Grid gridTemplateColumns="repeat(3, 1fr)" gap={4} w="100%">
-              <SmallField label="ID" value={app['id']} canCopy />
-              <SmallField
-                label="Round opted-in"
-                value={app['opted-in-at-round']}
-              />
-              <SmallField label="Deleted" value={app['deleted'].toString()} />
-            </Grid>
+            <Heading size="sm" pt={4}>
+              Opted-in apps
+            </Heading>
+            {apps?.map((app: any, index: number) => (
+              <>
+                {index > 0 && <Divider />}
+                <Grid gridTemplateColumns="repeat(3, 1fr)" gap={4} w="100%">
+                  <SmallField label="ID" value={app['id']} canCopy />
+                  <SmallField
+                    label="Round opted-in"
+                    value={app['opted-in-at-round']}
+                  />
+                  <SmallField
+                    label="Deleted"
+                    value={app['deleted'].toString()}
+                  />
+                </Grid>
+              </>
+            ))}
           </>
-        ))}
+        )}
       </Stack>
     </Flex>
   );
