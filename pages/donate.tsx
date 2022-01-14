@@ -27,7 +27,11 @@ function DonatePage() {
       <Stack pt={2} pb={4}>
         <Text>
           Allegory was created and is maintained by a single dev (
-          <Link href="https://twitter.com/daoarchitect" color="green.500">
+          <Link
+            href="https://twitter.com/daoarchitect"
+            color="green.500"
+            target="_blank"
+          >
             @daoarchitect
           </Link>
           ).
