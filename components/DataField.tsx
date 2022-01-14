@@ -20,7 +20,7 @@ interface IDataFieldProps {
 
 function DataField({ label, value, canCopy }: IDataFieldProps) {
   const { colorMode } = useColorMode();
-  const bgColor = colorMode === 'light' ? 'gray.100' : 'gray.800';
+  const bgColor = colorMode === 'light' ? 'gray.50' : 'gray.900';
   const { boxShadowXs, boxShadowSmInset } = useBoxShadow();
   const toast = useToast();
   const copyAddress = (value: string) => {

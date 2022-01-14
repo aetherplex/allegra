@@ -6,6 +6,7 @@ import {
   Flex,
   HStack,
   Icon,
+  useColorMode,
 } from '@chakra-ui/react';
 import Head from 'next/head';
 import React from 'react';
@@ -15,6 +16,10 @@ import { useBoxShadow } from '../hooks/useBoxShadow';
 
 function DonatePage() {
   const { boxShadowSmInset } = useBoxShadow();
+  const { colorMode } = useColorMode();
+
+  const bgColor = colorMode === 'light' ? 'gray.50' : 'gray.900';
+
   return (
     <Stack alignItems="flex-start">
       <Head>
@@ -46,6 +51,7 @@ function DonatePage() {
         p={5}
         boxShadow={boxShadowSmInset}
         borderRadius="lg"
+        bgColor={bgColor}
         justifyContent="flex-start"
       >
         <SmallField
