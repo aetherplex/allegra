@@ -48,6 +48,8 @@ function Home() {
 
   const { algodClient, forwardTransaction, messages, setMessages } = useAlgod();
 
+  // const inactiveTypes = ['keyreg', 'axfer', 'afrz', 'acfg'];
+
   const fetchParams = async () => {
     setIsFetching(true);
     try {
@@ -132,11 +134,13 @@ function Home() {
               border="none"
               fontFamily="mono"
             >
-              {transactionTypes.map((type) => (
-                <option key={type.type + '_' + type.name} value={type.name}>
-                  {type.name}
-                </option>
-              ))}
+              {transactionTypes.map((type) => {
+                return (
+                  <option key={type.type + '_' + type.name} value={type.name}>
+                    {type.name}
+                  </option>
+                );
+              })}
             </Select>
           </Stack>
           <Flex w="100%" flexDir="column">
