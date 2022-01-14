@@ -16,7 +16,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FiSearch } from 'react-icons/fi';
-import { BiPencil, BiSearch } from 'react-icons/bi';
+import { BiGift, BiPencil, BiSearch } from 'react-icons/bi';
 import { useAppDispatch } from '../utils/helpers';
 import { useSelector } from 'react-redux';
 import { selectNetwork } from '../store/networkSlice/selectors';
@@ -73,6 +73,20 @@ function Sidebar() {
               <Icon as={BiSearch} w={3} h={3} />
               <Text fontSize="md" cursor="pointer" fontWeight="semibold">
                 Search
+              </Text>
+            </HStack>
+          </Link>
+          <Link href="/donate" passHref>
+            <HStack
+              color={router.asPath === '/donate' ? activeColor : inactiveColor}
+              transition=".1s ease-in-out color"
+              _hover={{
+                color: activeColor,
+              }}
+            >
+              <Icon as={BiGift} w={3} h={3} />
+              <Text fontSize="md" cursor="pointer" fontWeight="semibold">
+                Donate
               </Text>
             </HStack>
           </Link>

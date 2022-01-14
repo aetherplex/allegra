@@ -180,20 +180,18 @@ function Search() {
       case 'block':
         return (
           <BlockInfo
-            unitName={searchData?.data?.asset?.params?.['unit-name']}
-            assetName={searchData?.data?.asset?.params?.['name']}
-            assetID={searchData?.data?.asset?.index}
-            total={searchData?.data?.asset?.params?.total}
-            decimals={searchData?.data?.asset?.params?.decimals}
-            defaultFrozen={searchData?.data?.asset?.params?.[
-              'default-frozen'
-            ].toString()}
-            url={searchData?.data?.asset?.params?.url}
-            metaDataHash={searchData?.data?.asset?.params?.['metadata-hash']}
-            managerAddr={searchData?.data?.asset?.params?.manager}
-            reserveAddr={searchData?.data?.asset?.params?.reserve}
-            freezeAddr={searchData?.data?.asset?.params?.freeze}
-            clawbackAddr={searchData?.data?.asset?.params?.clawback}
+            round={searchData?.data?.round}
+            genesisHash={searchData?.data?.['genesis-hash']}
+            genesisId={searchData?.data?.['genesis-id']}
+            previousBlockHash={searchData?.data?.['previous-block-hash']}
+            rewards={searchData?.data?.rewards}
+            seed={searchData?.data?.seed}
+            timestamp={searchData?.data?.timestamp}
+            transactions={searchData?.data?.transactions}
+            transactionsRoot={searchData?.data?.['transactions-root']}
+            transactionCounter={searchData?.data?.['txn-counter']}
+            upgradeState={searchData?.data?.['upgrade-state']}
+            upgradeVote={searchData?.data?.['upgrade-vote']}
           />
         );
     }
