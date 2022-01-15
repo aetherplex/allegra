@@ -296,6 +296,13 @@ export const transactionTypes: TransactionType[] = [
         codec: 'aamt',
       },
       {
+        name: 'Target address',
+        description: 'The address from which the funds will be withdrawn.',
+        type: 'Address',
+        required: true,
+        codec: 'asnd',
+      },
+      {
         name: 'Receiver',
         description: 'The recipient of the asset transfer.',
         type: 'Address',

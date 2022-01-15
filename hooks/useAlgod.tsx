@@ -290,10 +290,12 @@ export const useAlgod = () => {
     note,
     amount,
     receiver,
+    targetAddress,
   }: IFormValues) => {
     const { params, noteBytes } = await prepareParams(note);
 
     const txn = makeAssetTransferTxnWithSuggestedParamsFromObject({
+      revocationTarget: targetAddress,
       from: sender,
       amount: parseInt(amount!.toString()),
       to: receiver!,

@@ -129,6 +129,7 @@ function Field({
         />
       );
     }
+
     if (name === 'FreezeAddr' || name === 'ClawbackAddr') {
       return (
         <Stack>

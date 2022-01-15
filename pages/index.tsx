@@ -63,7 +63,7 @@ function Home() {
 
   const { algodClient, forwardTransaction, messages, setMessages } = useAlgod();
 
-  // const inactiveTypes = ['keyreg', 'axfer', 'afrz', 'acfg'];
+  const inactiveTypes = ['keyreg', 'appl', 'afrz', 'ac'];
 
   const fetchParams = async () => {
     setIsFetching(true);
@@ -155,6 +155,9 @@ function Home() {
               fontFamily="mono"
             >
               {transactionTypes.map((type) => {
+                if (inactiveTypes.includes(type.type)) {
+                  return null;
+                }
                 return (
                   <option key={type.type + '_' + type.name} value={type.name}>
                     {type.name}

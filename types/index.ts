@@ -113,6 +113,7 @@ export interface IFormValues {
   applicationID?: number;
   freezeAddrDisabled?: boolean;
   clawbackAddrDisabled?: boolean;
+  targetAddress?: string;
 }
 
 export type Token =
