@@ -299,7 +299,7 @@ function Home() {
   return (
     <Flex w="100%" flexDir="column" mt={{ base: 5, lg: 0 }} flexGrow={1}>
       <Head>
-        <title>Create | Allegory</title>
+        <title>Create | Allegra</title>
       </Head>
       <HStack>
         <Icon as={BiPencil} w={7} h={7} />

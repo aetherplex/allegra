@@ -213,7 +213,7 @@ function Search() {
   return (
     <Flex w="100%" flexDir="column" mt={{ base: 5, lg: 0 }}>
       <Head>
-        <title>Search | Allegory</title>
+        <title>Search | Allegra</title>
       </Head>
       <HStack>
         <Icon as={BiSearch} w={7} h={7} />

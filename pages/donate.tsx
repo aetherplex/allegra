@@ -23,7 +23,7 @@ function DonatePage() {
   return (
     <Stack mt={{ base: 5, lg: 0 }}>
       <Head>
-        <title>Donate | Allegory</title>
+        <title>Donate | Allegra</title>
       </Head>
       <HStack>
         <Icon as={BiGift} w={7} h={7} />
