@@ -137,12 +137,15 @@ function Header() {
           boxShadow={boxShadowXs}
           border="none"
           fontFamily="mono"
+          disabled={!addresses?.length}
+          display="inline-block"
         >
           <option value="mainnet">MainNet</option>
           <option value="testnet">TestNet</option>
           <option value="betanet">BetaNet</option>
           <option value="sandbox">Sandbox</option>
         </Select>
+
         <IconButton
           variant="ghost"
           onClick={toggleColorMode}

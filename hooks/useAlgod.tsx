@@ -224,16 +224,22 @@ export const useAlgod = () => {
     freezeAddr,
     clawbackAddr,
     note,
+    freezeAddrDisabled,
+    clawbackAddrDisabled,
   }: IFormValues) => {
     const { params, noteBytes } = await prepareParams(note);
+    const freeze = freezeAddrDisabled ? undefined : freezeAddr || undefined;
+    const clawback = clawbackAddrDisabled
+      ? undefined
+      : clawbackAddr || undefined;
     const txn = makeAssetConfigTxnWithSuggestedParamsFromObject({
       from: sender,
       assetIndex: parseInt(assetID!.toString()),
       note: noteBytes,
       manager: managerAddr || undefined,
       reserve: reserveAddr || undefined,
-      freeze: freezeAddr || undefined,
-      clawback: clawbackAddr || undefined,
+      freeze,
+      clawback,
       strictEmptyAddressChecking: false,
       suggestedParams: params as SuggestedParams,
     });
@@ -255,7 +261,7 @@ export const useAlgod = () => {
       assetIndex: parseInt(assetID!.toString()),
       note: noteBytes,
       amount: parseInt(amount!.toString()),
-      closeRemainderTo,
+      closeRemainderTo: closeRemainderTo || undefined,
       suggestedParams: params as SuggestedParams,
     });
     await sendTransaction(txn);

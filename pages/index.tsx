@@ -7,11 +7,18 @@ import {
   Heading,
   HStack,
   Icon,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
   Select,
   Spinner,
   Stack,
   Text,
   useColorMode,
+  useDisclosure,
   useToast,
 } from '@chakra-ui/react';
 import { SuggestedParams } from 'algosdk';
@@ -41,10 +48,18 @@ function Home() {
   const address = useSelector(selectActiveAddress);
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const { colorMode } = useColorMode();
-  const { boxShadowXs, boxShadowXsInset } = useBoxShadow();
+  const { boxShadowXs, boxShadowSm, boxShadowXsInset } = useBoxShadow();
   const bgColor = colorMode === 'light' ? 'gray.100' : 'gray.800';
   const outputBgColor = colorMode === 'light' ? 'gray.50' : 'gray.900';
   const toast = useToast();
+
+  const formData = watch();
+
+  const { onClose, onOpen, isOpen } = useDisclosure();
+
+  useEffect(() => {
+    console.log('Form data: ', formData);
+  }, [formData]);
 
   const { algodClient, forwardTransaction, messages, setMessages } = useAlgod();
 
@@ -118,7 +133,12 @@ function Home() {
   }, [transactionType]);
 
   const render = () => (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <chakra.form
+      onSubmit={handleSubmit(onSubmit)}
+      flexGrow={1}
+      display="flex"
+      flexDir="column"
+    >
       <Grid
         gridTemplateColumns={{ base: '1fr', xl: '3fr 3fr 4fr' }}
         gap={6}
@@ -156,14 +176,12 @@ function Home() {
             </Checkbox>
             <Stack mt={3}>
               {commonFields.map((field) => {
-                console.log('Name: ', camelize(field.name));
                 if (
                   useSuggestedParams &&
                   suggestedParams &&
                   // @ts-ignore
                   suggestedParams[camelize(field.name)] !== undefined
                 ) {
-                  console.log('SuggestedParams: ', suggestedParams);
                   return;
                 }
                 return (
@@ -215,28 +233,20 @@ function Home() {
           </Stack>
         </Flex>
         <Stack>
-          {/* <Flex
-       w="100%"
-       flexDir="column"
-       bgColor="gray.900"
-       minH="40%"
-       borderRadius="lg"
-       p={4}
-     >
-       <chakra.pre color="white" fontSize="sm" wordWrap="break-word">
-         {JSON.stringify(suggestedParams, null, 2)}
-       </chakra.pre>
-     </Flex> */}
+          {/* <Button boxShadow={boxShadowXs} onClick={onOpen}>
+            View raw preview
+          </Button> */}
           <Button
             type="submit"
             isLoading={isLoading}
             colorScheme="green"
             onClick={() => setMessages([])}
             minH="2.5rem"
+            boxShadow={boxShadowSm}
           >{`Send ${transactionType} transaction`}</Button>
           <Flex w="100%" alignItems="flex-end" justifyContent="space-between">
             <Heading fontSize="xl" pt={4}>
-              Ouput log
+              Output log
             </Heading>
             <Button
               size="xs"
@@ -271,7 +281,7 @@ function Home() {
           </chakra.pre>
         </Stack>
       </Grid>
-    </form>
+    </chakra.form>
   );
 
   const renderLoading = () => (
@@ -296,6 +306,31 @@ function Home() {
         <Heading size="lg">Create transaction</Heading>
       </HStack>
       {isFetching ? renderLoading() : render()}
+      {/* <Modal motionPreset="slideInBottom" onClose={onClose} isOpen={isOpen}>
+        <ModalOverlay />
+        <ModalContent pb={5} bgColor={bgColor} minW="52vw">
+          <ModalHeader>Raw preview</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody w="100%">
+            <Flex
+              w="100%"
+              flexDir="column"
+              boxShadow={boxShadowXsInset}
+              bgColor={outputBgColor}
+              borderRadius="lg"
+              p={4}
+            >
+              <chakra.pre
+                color={colorMode === 'light' ? 'gray.900' : 'white'}
+                fontSize="sm"
+                wordWrap="break-word"
+              >
+                {JSON.stringify(formData, null, 2)}
+              </chakra.pre>
+            </Flex>
+          </ModalBody>
+        </ModalContent>
+      </Modal> */}
     </Flex>
   );
 }

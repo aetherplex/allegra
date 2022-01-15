@@ -111,6 +111,8 @@ export interface IFormValues {
   lastRound?: number;
   firstRound?: number;
   applicationID?: number;
+  freezeAddrDisabled?: boolean;
+  clawbackAddrDisabled?: boolean;
 }
 
 export type Token =

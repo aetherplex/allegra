@@ -8,6 +8,8 @@ import {
   Button,
   Checkbox,
   Flex,
+  FormControl,
+  FormLabel,
   HStack,
   Icon,
   IconButton,
@@ -61,7 +63,7 @@ function Field({
 }: FieldProps) {
   const [numInputs, setNumInputs] = useState(1);
   const { inputType } = useField({ name, type, description, required, codec });
-
+  const [fieldDisabled, setFieldDisabled] = useState(false);
   const { boxShadowXsInset, boxShadowXs } = useBoxShadow();
 
   const { colorMode } = useColorMode();
@@ -125,6 +127,34 @@ function Field({
           bgColor={bgColor}
           fontFamily="mono"
         />
+      );
+    }
+    if (name === 'FreezeAddr' || name === 'ClawbackAddr') {
+      return (
+        <Stack>
+          <Input
+            size="sm"
+            type={inputType}
+            border="none"
+            boxShadow={boxShadowXsInset}
+            {...register(name.toLowerCase(), { required })}
+            bgColor={bgColor}
+            fontFamily="mono"
+            disabled={fieldDisabled}
+          />
+          <FormControl display="flex" alignItems="center">
+            <FormLabel htmlFor={name} mb="0" fontSize="xs">
+              {`Disable ${name}`}
+            </FormLabel>
+            <Switch
+              id={name}
+              {...register(camelize(`${name.toLowerCase()}-disabled`), {
+                required,
+              })}
+              onChange={() => setFieldDisabled((prev) => !prev)}
+            />
+          </FormControl>
+        </Stack>
       );
     }
     return (

@@ -9,10 +9,8 @@ import {
   useColorMode,
 } from '@chakra-ui/react';
 import { format, fromUnixTime } from 'date-fns';
-import { Base64 } from 'js-base64';
 import React from 'react';
 import { useBoxShadow } from '../hooks/useBoxShadow';
-import { capitalize } from '../utils/helpers';
 import DataField from './DataField';
 import SmallField from './SmallField';
 

@@ -21,7 +21,7 @@ function DonatePage() {
   const bgColor = colorMode === 'light' ? 'gray.50' : 'gray.900';
 
   return (
-    <Stack w="100%" mt={{ base: 5, lg: 0 }}>
+    <Stack mt={{ base: 5, lg: 0 }}>
       <Head>
         <title>Donate | Allegory</title>
       </Head>

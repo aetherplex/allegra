@@ -8,6 +8,7 @@ import {
   useColorMode,
 } from '@chakra-ui/react';
 import React from 'react';
+import { useBoxShadow } from '../hooks/useBoxShadow';
 import { IFormValues } from '../types';
 import { capitalize } from '../utils/helpers';
 import DataField from './DataField';
@@ -29,7 +30,9 @@ function AssetInfo({
 }: Partial<IFormValues>) {
   const { colorMode } = useColorMode();
 
-  const bgColor = colorMode === 'light' ? 'gray.100' : 'gray.700';
+  const bgColor = colorMode === 'light' ? 'gray.50' : 'gray.900';
+
+  const { boxShadowXsInset } = useBoxShadow();
 
   const renderInfo = () => (
     <Grid w="100%" gridTemplateColumns="repeat(3, 1fr)" gap={4} mt={6}>
@@ -44,6 +47,7 @@ function AssetInfo({
         p={5}
         gridColumnStart={1}
         gridColumnEnd={4}
+        boxShadow={boxShadowXsInset}
       >
         <Heading size="md">Details</Heading>
         <Grid gridTemplateColumns="repeat(3, 1fr)" gap={4}>
@@ -67,6 +71,7 @@ function AssetInfo({
         gridColumnStart={1}
         gridColumnEnd={4}
         spacing={4}
+        boxShadow={boxShadowXsInset}
       >
         <Heading size="md">Controlling addresses</Heading>
         <SmallField label="Manager" value={managerAddr} canCopy />
