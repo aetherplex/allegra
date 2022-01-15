@@ -5,6 +5,7 @@ import {
   makeApplicationNoOpTxnFromObject,
   makeAssetConfigTxnWithSuggestedParamsFromObject,
   makeAssetCreateTxnWithSuggestedParamsFromObject,
+  makeAssetDestroyTxnWithSuggestedParamsFromObject,
   makeAssetFreezeTxnWithSuggestedParamsFromObject,
   makeAssetTransferTxnWithSuggestedParamsFromObject,
   makePaymentTxnWithSuggestedParamsFromObject,
@@ -120,6 +121,10 @@ export const useAlgod = () => {
       case 'acfg':
         if (data.type === 'Asset Creation') {
           await sendAssetCreationTransaction(data);
+          break;
+        }
+        if (data.type === 'Asset Destroy') {
+          await sendAssetDestroyTransaction(data);
           break;
         }
         await sendAssetConfigTransaction(data);
@@ -262,6 +267,22 @@ export const useAlgod = () => {
       note: noteBytes,
       amount: parseInt(amount!.toString()),
       closeRemainderTo: closeRemainderTo || undefined,
+      suggestedParams: params as SuggestedParams,
+    });
+    await sendTransaction(txn);
+  };
+
+  const sendAssetDestroyTransaction = async ({
+    assetID,
+    sender,
+
+    note,
+  }: IFormValues) => {
+    const { params, noteBytes } = await prepareParams(note);
+    const txn = makeAssetDestroyTxnWithSuggestedParamsFromObject({
+      from: sender,
+      assetIndex: parseInt(assetID!.toString()),
+      note: noteBytes,
       suggestedParams: params as SuggestedParams,
     });
     await sendTransaction(txn);

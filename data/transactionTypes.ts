@@ -226,6 +226,21 @@ export const transactionTypes: TransactionType[] = [
     ],
   },
   {
+    name: 'Asset Destroy',
+    transactionObjectType: 'AssetConfigTx',
+    type: 'acfg',
+    fields: [
+      {
+        name: 'Asset ID',
+        required: true,
+        description:
+          'For re-configure or destroy transactions, this is the unique asset ID. On asset creation, the ID is set to zero.',
+        type: 'uint64',
+        codec: 'caid',
+      },
+    ],
+  },
+  {
     name: 'Asset Transfer',
     transactionObjectType: 'AssetTransferTx',
     type: 'axfer',
