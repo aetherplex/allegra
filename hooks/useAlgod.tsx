@@ -15,17 +15,28 @@ import {
 } from 'algosdk';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { selectWalletType } from '../store/authSlice/selectors';
 import { selectNetwork } from '../store/networkSlice/selectors';
-import { IFormValues } from '../types';
+import { IFormValues, WalletType } from '../types';
 import { verboseWaitForConfirmation } from '../utils/algod';
 declare const AlgoSigner: any;
+declare global {
+  interface Window {
+    myAlgo: any;
+  }
+}
 
 export const useAlgod = () => {
   const network = useSelector(selectNetwork);
   const [messages, setMessages] = useState<string[]>(['']);
+  const walletType = useSelector(selectWalletType);
 
   const [algodClient, setAlgodClient] = useState<Algodv2>();
   const [indexerClient, setIndexerClient] = useState<Indexer>();
+
+  useEffect(() => {
+    window.myAlgo = require('@randlabs/myalgo-connect');
+  }, []);
 
   useEffect(() => {
     setAlgodClient(
@@ -75,15 +86,34 @@ export const useAlgod = () => {
     };
   };
 
+  const sendAlgoSignerTransaction = async (txn: Uint8Array) => {
+    const base64Txn = AlgoSigner.encoding.msgpackToBase64(txn);
+    const signedTxns = await AlgoSigner.signTxn([{ txn: base64Txn }]);
+    return AlgoSigner.encoding.base64ToMsgpack(signedTxns[0].blob);
+  };
+
+  const sendMyAlgoTransaction = async (txn: Uint8Array) => {
+    const myAlgoConnect = new window.myAlgo();
+    const signedTxn = await myAlgoConnect.signTransaction(txn);
+    return signedTxn.blob;
+  };
+
   const sendTransaction = async (txn: Transaction) => {
     const binaryTxn = txn.toByte();
-    const base64Txn = AlgoSigner.encoding.msgpackToBase64(binaryTxn);
-    const signedTxns = await AlgoSigner.signTxn([{ txn: base64Txn }]);
-    const binarySignedTxn = AlgoSigner.encoding.base64ToMsgpack(
-      signedTxns[0].blob
-    );
+    let signedTxn: Uint8Array | null = null;
+    console.log('Wallet type: ', walletType);
+    switch (walletType) {
+      case WalletType.AlgoSigner:
+        signedTxn = await sendAlgoSignerTransaction(binaryTxn);
+        break;
+      case WalletType.MyAlgo:
+        signedTxn = await sendMyAlgoTransaction(binaryTxn);
+        break;
+    }
 
-    const res = await algodClient?.sendRawTransaction(binarySignedTxn).do();
+    const res = await algodClient
+      ?.sendRawTransaction(signedTxn as Uint8Array)
+      .do();
 
     await verboseWaitForConfirmation(res.txId, setMessages, algodClient);
   };
@@ -114,7 +144,7 @@ export const useAlgod = () => {
     switch (data.transactionType) {
       case 'pay':
         await sendPayTransaction(data);
-        break;
+        return;
       case 'keyreg':
         await sendKeyRegTransaction(data);
         break;
@@ -158,8 +188,6 @@ export const useAlgod = () => {
     receiver,
     note,
     amount,
-    closeRemainderTo,
-    rekeyTo,
   }: IFormValues) => {
     const { params, noteBytes } = await prepareParams(note);
     const txn = makePaymentTxnWithSuggestedParamsFromObject({
@@ -169,7 +197,7 @@ export const useAlgod = () => {
       amount: parseInt(amount!.toString()),
       suggestedParams: params as SuggestedParams,
     });
-    console.log('TXN: ' + txn);
+    console.log('TXN: ', txn);
     await sendTransaction(txn);
   };
 

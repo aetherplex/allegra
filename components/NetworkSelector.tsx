@@ -1,7 +1,7 @@
 import { Select, toast, useToast } from '@chakra-ui/react';
 import MyAlgoConnect from '@randlabs/myalgo-connect';
-
-import React, { useEffect, useState } from 'react';
+import { networks } from '../data/networks';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useBoxShadow } from '../hooks/useBoxShadow';
 import { setAddresses } from '../store/authSlice';

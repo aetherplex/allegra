@@ -120,7 +120,7 @@ function Header() {
           icon={colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
         />
       </HStack>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent p={6} alignItems="center">
           <ModalHeader>Select wallet</ModalHeader>

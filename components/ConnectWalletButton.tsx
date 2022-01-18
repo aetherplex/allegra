@@ -2,8 +2,11 @@ import { Button } from '@chakra-ui/react';
 import MyAlgoConnect from '@randlabs/myalgo-connect';
 import React from 'react';
 import { setAddresses, initWallet } from '../store/authSlice';
-import { WalletType } from '../types';
+import { INetworkState, WalletType } from '../types';
 import { useAppDispatch } from '../utils/helpers';
+import { networks } from '../data/networks';
+import { useSelector } from 'react-redux';
+import { selectNetwork } from '../store/networkSlice/selectors';
 declare const AlgoSigner: any;
 
 interface IConnectWalletButtonProps {
@@ -19,6 +22,8 @@ function ConnectWalletButton({
 }: IConnectWalletButtonProps) {
   const dispatch = useAppDispatch();
 
+  const network = useSelector(selectNetwork);
+
   const connectMyAlgo = async () => {
     const myAlgoWallet = new MyAlgoConnect();
     const accounts = await myAlgoWallet.connect();
@@ -31,11 +36,11 @@ function ConnectWalletButton({
     onClose();
   };
 
-  const connectAlgoSigner = async () => {
+  const connectAlgoSigner = async (networkName: string) => {
     await AlgoSigner.connect();
     const acnts = await AlgoSigner.accounts({
       // @ts-ignore
-      ledger: networks[netwk],
+      ledger: networks[networkName],
     });
     const addresses = acnts.map((account: any) => account.address);
     dispatch(setAddresses(addresses));
@@ -48,7 +53,7 @@ function ConnectWalletButton({
         connectMyAlgo();
         return;
       case WalletType.AlgoSigner:
-        connectAlgoSigner();
+        connectAlgoSigner(network.name);
         return;
     }
   };
