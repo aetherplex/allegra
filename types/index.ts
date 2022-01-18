@@ -142,3 +142,9 @@ export interface INetwork {
   fullServer?: string;
   token: Token;
 }
+
+export enum WalletType {
+  MyAlgo = 'myAlgo',
+  AlgoSigner = 'algoSigner',
+  NONE = 'none',
+}

@@ -4,70 +4,47 @@ import {
   Flex,
   HStack,
   IconButton,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
   Select,
+  Stack,
   useColorMode,
+  useDisclosure,
   useToast,
 } from '@chakra-ui/react';
+import dynamic from 'next/dynamic';
 import React, { useEffect, useState } from 'react';
 import { BiClipboard } from 'react-icons/bi';
 import { useSelector } from 'react-redux';
-import { networks } from '../data/networks';
 import { useBoxShadow } from '../hooks/useBoxShadow';
-import { setActiveAddress, setAddresses } from '../store/authSlice';
+import { setActiveAddress } from '../store/authSlice';
 import {
   selectActiveAddress,
   selectAddresses,
 } from '../store/authSlice/selectors';
-import { setNetwork } from '../store/networkSlice';
-import { selectNetwork } from '../store/networkSlice/selectors';
+import { WalletType } from '../types';
 import { shortenAddress, useAppDispatch } from '../utils/helpers';
 declare const AlgoSigner: any;
 
 function Header() {
+  const NetworkSelector = dynamic(() => import('./NetworkSelector'), {
+    ssr: false,
+  });
+  const ConnectWalletButton = dynamic(() => import('./ConnectWalletButton'), {
+    ssr: false,
+  });
   const { colorMode, toggleColorMode } = useColorMode();
   const toast = useToast();
   const [accounts, setAccounts] = useState<any[]>();
-  const network = useSelector(selectNetwork);
   const dispatch = useAppDispatch();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const activeAddress = useSelector(selectActiveAddress);
   const addresses = useSelector(selectAddresses);
   const { boxShadowXs, boxShadowXsInset } = useBoxShadow();
-  const [localNetwork, setLocalNetwork] = useState('mainnet');
-
-  const fetchAddresses = async (netwk: any) => {
-    const acnts = await AlgoSigner.accounts({
-      // @ts-ignore
-      ledger: networks[netwk],
-    });
-    const addresses = acnts.map((account: any) => account.address);
-    dispatch(setAddresses(addresses));
-  };
-
-  const connectWallet = async () => {
-    await AlgoSigner.connect();
-    await fetchAddresses(localNetwork);
-  };
-
-  const changeNetwork = async (value: any) => {
-    setLocalNetwork(value);
-    try {
-      await dispatch(setNetwork(value));
-      await fetchAddresses(value);
-      toast({
-        title: 'Network changed',
-        description: `You are now connected to ${value}`,
-        status: 'success',
-        duration: 3000,
-      });
-    } catch (e: any) {
-      toast({
-        title: 'Error',
-        description: e.message,
-        status: 'error',
-        duration: 5000,
-      });
-    }
-  };
 
   const copyAddress = async () => {
     navigator.clipboard.writeText(activeAddress);
@@ -126,25 +103,11 @@ function Header() {
             </Select>
           </HStack>
         ) : (
-          <Button onClick={connectWallet} colorScheme="green" variant="outline">
+          <Button onClick={onOpen} colorScheme="green" variant="outline">
             Connect wallet
           </Button>
         )}
-        <Select
-          w="auto"
-          cursor="pointer"
-          onChange={(e) => changeNetwork(e.target.value)}
-          boxShadow={boxShadowXs}
-          border="none"
-          fontFamily="mono"
-          disabled={!addresses?.length}
-          display="inline-block"
-        >
-          <option value="mainnet">MainNet</option>
-          <option value="testnet">TestNet</option>
-          <option value="betanet">BetaNet</option>
-          <option value="sandbox">Sandbox</option>
-        </Select>
+        <NetworkSelector />
 
         <IconButton
           variant="ghost"
@@ -157,6 +120,26 @@ function Header() {
           icon={colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
         />
       </HStack>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent p={6} alignItems="center">
+          <ModalHeader>Select wallet</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody w="100%">
+            <Stack w="100%">
+              <ConnectWalletButton type={WalletType.MyAlgo} onClose={onClose}>
+                MyAlgo
+              </ConnectWalletButton>
+              <ConnectWalletButton
+                type={WalletType.AlgoSigner}
+                onClose={onClose}
+              >
+                AlgoSigner
+              </ConnectWalletButton>
+            </Stack>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </Flex>
   );
 }

@@ -1,28 +1,21 @@
-import { MoonIcon, SearchIcon, SunIcon } from '@chakra-ui/icons';
 import {
   Flex,
-  Text,
   Heading,
-  IconButton,
-  useColorMode,
-  Stack,
   HStack,
   Icon,
-  Select,
-  SelectField,
+  Stack,
+  useColorMode,
   useToast,
 } from '@chakra-ui/react';
-import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { FiSearch } from 'react-icons/fi';
-import { BiGift, BiPencil, BiSearch } from 'react-icons/bi';
-import { useAppDispatch } from '../utils/helpers';
+import React from 'react';
+import { BiGift, BiMapAlt, BiPencil, BiSearch } from 'react-icons/bi';
 import { useSelector } from 'react-redux';
-import { selectNetwork } from '../store/networkSlice/selectors';
-import { setNetwork } from '../store/networkSlice';
 import { useBoxShadow } from '../hooks/useBoxShadow';
 import { useWindowSize } from '../hooks/useWindowSize';
+import { selectNetwork } from '../store/networkSlice/selectors';
+import { useAppDispatch } from '../utils/helpers';
 
 function Sidebar() {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -112,6 +105,28 @@ function Sidebar() {
               cursor="pointer"
             >
               <Icon as={BiGift} w={{ base: 5, lg: 8 }} h={{ base: 5, lg: 8 }} />
+            </HStack>
+          </Link>
+          <Link href="/roadmap" passHref>
+            <HStack
+              color={router.asPath === '/roadmap' ? activeColor : inactiveColor}
+              transition=".25s ease-in-out all"
+              boxShadow={router.asPath === '/roadmap' ? boxShadowSmInset : ''}
+              p={{ base: 3, lg: 5 }}
+              _hover={{
+                color: activeColor,
+                boxShadow: () =>
+                  router.asPath === '/roadmap' ? '' : boxShadowSm,
+              }}
+              I
+              borderRadius="xl"
+              cursor="pointer"
+            >
+              <Icon
+                as={BiMapAlt}
+                w={{ base: 5, lg: 8 }}
+                h={{ base: 5, lg: 8 }}
+              />
             </HStack>
           </Link>
         </Stack>
