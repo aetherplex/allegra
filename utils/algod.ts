@@ -17,12 +17,18 @@ export async function verboseWaitForConfirmation(
   const roundTimeout = 2;
   setMessage((prev) => [...prev, `Transaction ID:  \n${txnId}`]);
   const completedTx = await waitForConfirmation(txnId, roundTimeout, client);
-  console.log('Completed transaction: ', completedTx);
 
   setMessage((prev) => [
     ...prev,
-    `✨ Transaction confirmed in round ${completedTx['confirmed-round']} `,
+    `✅ Transaction confirmed in round ${completedTx['confirmed-round']} `,
   ]);
+
+  if (completedTx['asset-index'] !== undefined) {
+    setMessage((prev) => [
+      ...prev,
+      ` ✨ Asset ID: ${completedTx['asset-index']}`,
+    ]);
+  }
   return completedTx;
 }
 

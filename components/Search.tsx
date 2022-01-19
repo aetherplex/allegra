@@ -27,7 +27,12 @@ import { searchTypes } from '../data/searchTypes';
 import { useBoxShadow } from '../hooks/useBoxShadow';
 import { selectNetwork } from '../store/networkSlice/selectors';
 
-function Search() {
+interface ISearchProps {
+  children: React.ReactNode;
+  activeSelection: 'asset' | 'account' | 'app' | 'transaction' | 'block';
+}
+
+function Search({ children, activeSelection }: ISearchProps) {
   const { register, handleSubmit, watch, setValue } = useForm();
   const [isLoading, setIsLoading] = useState(false);
   const { colorMode } = useColorMode();
@@ -109,7 +114,7 @@ function Search() {
             clawbackAddr={searchData?.data?.asset?.params?.clawback}
           />
         );
-      case 'application':
+      case 'app':
         return (
           <ApplicationInfo
             id={searchData?.data?.application?.id}
@@ -211,7 +216,7 @@ function Search() {
   };
 
   return (
-    <Flex w="100%" flexDir="column" mt={{ base: 5, lg: 0 }}>
+    <Flex w="100%" flexDir="column" mt={{ base: 5, lg: 0 }} flexGrow={1}>
       <Head>
         <title>Search | Allegra</title>
       </Head>
@@ -248,10 +253,11 @@ function Search() {
               w="30%"
               cursor="pointer"
               {...register('type', { required: true })}
+              value={activeSelection}
             >
               <option value="asset">Asset</option>
               <option value="account">Account</option>
-              <option value="application">Application</option>
+              <option value="app">Application</option>
               <option value="transaction">Transaction</option>
               <option value="block">Block</option>
             </Select>
@@ -265,8 +271,15 @@ function Search() {
             </Button>
           </HStack>
         </Flex>
-        <Flex mt={16} flexGrow={1} w="100%">
-          {isLoading ? renderLoading() : renderInfo()}
+        <Flex
+          mt={8}
+          flexGrow={1}
+          w="100%"
+          flexDir="column"
+          alignItems="center"
+          justifyContent="center"
+        >
+          {children || null}
         </Flex>
       </chakra.form>
     </Flex>

@@ -10,6 +10,7 @@ import {
 } from '@chakra-ui/react';
 import { Base64 } from 'js-base64';
 import React from 'react';
+import { useBoxShadow } from '../hooks/useBoxShadow';
 import { capitalize } from '../utils/helpers';
 import DataField from './DataField';
 import SmallField from './SmallField';
@@ -27,7 +28,9 @@ function ApplicationInfo({
 }: any) {
   const { colorMode } = useColorMode();
 
-  const bgColor = colorMode === 'light' ? 'gray.100' : 'gray.700';
+  const bgColor = colorMode === 'light' ? 'gray.50' : 'gray.900';
+
+  const { boxShadowXsInset } = useBoxShadow();
 
   const renderInfo = () => (
     <Grid w="100%" gridTemplateColumns="repeat(3, 1fr)" gap={4} mt={6}>
@@ -42,6 +45,7 @@ function ApplicationInfo({
         bgColor={bgColor}
         spacing={4}
         borderRadius="xl"
+        boxShadow={boxShadowXsInset}
       >
         <Heading size="md">Details</Heading>
         <HStack alignItems="center">
