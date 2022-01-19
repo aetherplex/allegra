@@ -44,6 +44,7 @@ function ConnectWalletButton({
     });
     const addresses = acnts.map((account: any) => account.address);
     dispatch(setAddresses(addresses));
+    dispatch(initWallet({ addresses, walletType: WalletType.AlgoSigner }));
     onClose();
   };
 

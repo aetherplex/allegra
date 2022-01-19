@@ -237,7 +237,7 @@ export const useAlgod = () => {
       unitName,
       assetName,
       assetURL: url,
-      total: parseInt(total!.toString()),
+      total: BigInt(total!),
       decimals: parseInt(decimals!.toString()),
       manager: managerAddr || sender,
       reserve: reserveAddr || sender,
