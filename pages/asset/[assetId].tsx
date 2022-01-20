@@ -14,6 +14,8 @@ function AssetPage() {
 
   async function fetchAssetDetails(assetId: string) {
     setIsLoading(true);
+    console.log('INDEXER CLIENT: ', indexerClient);
+    console.log('ASSET ID FETCH: ', assetId);
     const assetDetails = await indexerClient
       ?.lookupAssetByID(parseInt(assetId))
       .do();
@@ -54,7 +56,10 @@ function AssetPage() {
   };
 
   useEffect(() => {
-    fetchAssetDetails(assetId as string);
+    console.log('Asset ID: ', assetId);
+    if (assetId) {
+      fetchAssetDetails(assetId as string);
+    }
   }, [assetId]);
 
   return (

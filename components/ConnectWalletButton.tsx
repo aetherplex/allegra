@@ -1,4 +1,4 @@
-import { Button } from '@chakra-ui/react';
+import { Button, useToast } from '@chakra-ui/react';
 import MyAlgoConnect from '@randlabs/myalgo-connect';
 import React from 'react';
 import { setAddresses, initWallet } from '../store/authSlice';
@@ -21,18 +21,25 @@ function ConnectWalletButton({
   onClose,
 }: IConnectWalletButtonProps) {
   const dispatch = useAppDispatch();
-
+  const toast = useToast();
   const network = useSelector(selectNetwork);
 
   const connectMyAlgo = async () => {
     const myAlgoWallet = new MyAlgoConnect();
-    const accounts = await myAlgoWallet.connect();
-    const addresses = accounts.map(
-      (account: any) => account.address
-    ) as string[];
-    console.log('Addresses: ', addresses);
-    dispatch(setAddresses(addresses));
-    dispatch(initWallet({ addresses, walletType: WalletType.MyAlgo }));
+    try {
+      const accounts = await myAlgoWallet.connect();
+      const addresses = accounts.map(
+        (account: any) => account.address
+      ) as string[];
+      console.log('Addresses: ', addresses);
+      dispatch(setAddresses(addresses));
+      dispatch(initWallet({ addresses, walletType: WalletType.MyAlgo }));
+    } catch (err) {
+      if (err instanceof Error) {
+        throw new Error(err.message);
+      }
+      throw new Error('Could not connect to wallet.');
+    }
     onClose();
   };
 
@@ -49,13 +56,23 @@ function ConnectWalletButton({
   };
 
   const connectWallet = async (walletType: WalletType) => {
-    switch (walletType) {
-      case WalletType.MyAlgo:
-        connectMyAlgo();
-        return;
-      case WalletType.AlgoSigner:
-        connectAlgoSigner(network.name);
-        return;
+    try {
+      switch (walletType) {
+        case WalletType.MyAlgo:
+          await connectMyAlgo();
+          return;
+        case WalletType.AlgoSigner:
+          connectAlgoSigner(network.name);
+          return;
+      }
+    } catch (err) {
+      if (err instanceof Error) {
+        toast({
+          title: err.message,
+          status: 'error',
+          duration: 5000,
+        });
+      }
     }
   };
   return <Button onClick={() => connectWallet(type)}>{children}</Button>;

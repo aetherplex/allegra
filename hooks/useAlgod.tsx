@@ -17,7 +17,7 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { selectWalletType } from '../store/authSlice/selectors';
 import { selectNetwork } from '../store/networkSlice/selectors';
-import { IFormValues, WalletType } from '../types';
+import { IFormValues, Message, WalletType } from '../types';
 import { verboseWaitForConfirmation } from '../utils/algod';
 declare const AlgoSigner: any;
 declare global {
@@ -28,11 +28,25 @@ declare global {
 
 export const useAlgod = () => {
   const network = useSelector(selectNetwork);
-  const [messages, setMessages] = useState<string[]>(['']);
+  const [messages, setMessages] = useState<Message[]>([]);
   const walletType = useSelector(selectWalletType);
 
-  const [algodClient, setAlgodClient] = useState<Algodv2>();
-  const [indexerClient, setIndexerClient] = useState<Indexer>();
+  const [algodClient, setAlgodClient] = useState<Algodv2>(
+    () =>
+      new Algodv2(
+        network.algodNetwork.token,
+        network.algodNetwork.server,
+        network.algodNetwork.port
+      )
+  );
+  const [indexerClient, setIndexerClient] = useState<Indexer>(
+    () =>
+      new Indexer(
+        network.indexerNetwork.token,
+        network.indexerNetwork.server,
+        network.indexerNetwork.port
+      )
+  );
 
   useEffect(() => {
     window.myAlgo = require('@randlabs/myalgo-connect');

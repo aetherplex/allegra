@@ -148,3 +148,12 @@ export enum WalletType {
   AlgoSigner = 'algoSigner',
   NONE = 'none',
 }
+
+export type Message = {
+  message: string;
+  action?: 'copy' | 'link';
+  pathname?: string;
+  query?: {
+    [key: string]: string;
+  };
+};

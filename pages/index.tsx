@@ -7,18 +7,11 @@ import {
   Heading,
   HStack,
   Icon,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
   Select,
   Spinner,
   Stack,
   Text,
   useColorMode,
-  useDisclosure,
   useToast,
 } from '@chakra-ui/react';
 import { SuggestedParams } from 'algosdk';
@@ -28,12 +21,13 @@ import { useForm } from 'react-hook-form';
 import { BiPencil } from 'react-icons/bi';
 import { useSelector } from 'react-redux';
 import Field from '../components/Field';
+import OutputLine from '../components/OutputLine';
 import { commonFields } from '../data/commonFields';
 import { transactionTypes } from '../data/transactionTypes';
 import { useAlgod } from '../hooks/useAlgod';
 import { useBoxShadow } from '../hooks/useBoxShadow';
 import { selectActiveAddress } from '../store/authSlice/selectors';
-import { IField, IFormValues, TransactionType } from '../types';
+import { IField, IFormValues, Message, TransactionType } from '../types';
 import { camelize } from '../utils/helpers';
 
 function Home() {
@@ -54,8 +48,6 @@ function Home() {
   const toast = useToast();
 
   const formData = watch();
-
-  const { onClose, onOpen, isOpen } = useDisclosure();
 
   useEffect(() => {
     console.log('Form data: ', formData);
@@ -270,16 +262,13 @@ function Home() {
             boxShadow={boxShadowXsInset}
             bgColor={outputBgColor}
           >
-            {messages?.map((message: string) => (
-              <Text
+            {messages?.map(({ message, pathname, query }: Message) => (
+              <OutputLine
                 key={message}
-                color={colorMode === 'light' ? 'gray.900' : 'white'}
-                fontSize="xs"
-                mt={2}
-                fontFamily="mono"
-              >
-                {message}
-              </Text>
+                message={message}
+                pathname={pathname}
+                query={query}
+              />
             ))}
           </chakra.pre>
         </Stack>

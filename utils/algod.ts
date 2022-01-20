@@ -1,6 +1,7 @@
 import { Algodv2, Indexer, Transaction } from 'algosdk';
 import PaymentTransaction from 'algosdk/dist/types/src/types/transactions/payment';
 import { Dispatch, SetStateAction } from 'react';
+import { Message } from '../types';
 
 /**
  *
@@ -10,23 +11,41 @@ import { Dispatch, SetStateAction } from 'react';
  */
 export async function verboseWaitForConfirmation(
   txnId: string,
-  setMessage: Dispatch<SetStateAction<string[]>>,
+  setMessage: Dispatch<SetStateAction<Message[]>>,
   client?: Algodv2
 ): Promise<Record<string, any>> {
-  setMessage(['Awaiting confirmation (this will take several seconds)...']);
+  setMessage([
+    {
+      message: 'Awaiting confirmation (this will take several seconds)...',
+    },
+  ]);
   const roundTimeout = 2;
-  setMessage((prev) => [...prev, `Transaction ID:  \n${txnId}`]);
+  setMessage((prev) => [
+    ...prev,
+    {
+      message: `Transaction ID:  \n${txnId}`,
+      action: 'link',
+      pathname: `transaction/${txnId}`,
+    },
+  ]);
   const completedTx = await waitForConfirmation(txnId, roundTimeout, client);
 
   setMessage((prev) => [
     ...prev,
-    `✅ Transaction confirmed in round ${completedTx['confirmed-round']} `,
+    {
+      message: `✅ Transaction confirmed in round ${completedTx['confirmed-round']} `,
+    },
   ]);
 
   if (completedTx['asset-index'] !== undefined) {
     setMessage((prev) => [
       ...prev,
-      ` ✨ Asset ID: ${completedTx['asset-index']}`,
+      {
+        message: `✨ Asset ID: ${completedTx['asset-index']}`,
+        action: 'link',
+        pathname: `asset/[assetId]`,
+        query: { assetId: completedTx['asset-index'] },
+      },
     ]);
   }
   return completedTx;
