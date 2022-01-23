@@ -265,9 +265,7 @@ function Search() {
             </Button>
           </HStack>
         </Flex>
-        <Flex mt={16} flexGrow={1} w="100%">
-          {isLoading ? renderLoading() : renderInfo()}
-        </Flex>
+        <Flex mt={16} flexGrow={1} w="100%"></Flex>
       </chakra.form>
     </Flex>
   );

@@ -25,26 +25,24 @@ function TransactionPage() {
 
   const renderTransactionDetails = () => (
     <TransactionInfo
-      id={txnData?.data?.transaction?.id}
-      confirmedRound={txnData?.data?.transaction?.['confirmed-round']}
-      paymentTransaction={txnData?.data?.transaction?.['payment-transaction']}
-      applicationTransaction={
-        txnData?.data?.transaction?.['application-transaction']
-      }
-      sender={txnData?.data?.transaction?.['sender']}
-      transactionType={txnData?.data?.transaction?.['tx-type']}
-      fee={txnData?.data?.transaction?.['fee']}
-      note={txnData?.data?.transaction?.['note']}
+      id={txnData?.transaction?.id}
+      confirmedRound={txnData?.transaction?.['confirmed-round']}
+      paymentTransaction={txnData?.transaction?.['payment-transaction']}
+      applicationTransaction={txnData?.transaction?.['application-transaction']}
+      sender={txnData?.transaction?.['sender']}
+      transactionType={txnData?.transaction?.['tx-type']}
+      fee={txnData?.transaction?.['fee']}
+      note={txnData?.transaction?.['note']}
       assetTransferTransaction={
-        txnData?.data?.transaction?.['asset-transfer-transaction']
+        txnData?.transaction?.['asset-transfer-transaction']
       }
       assetConfigTransaction={
-        txnData?.data?.transaction?.['asset-config-transaction']
+        txnData?.transaction?.['asset-config-transaction']
       }
-      roundTime={txnData?.data?.transaction?.['round-time']}
-      createdAssetIndex={txnData?.data?.transaction?.['created-asset-index']}
+      roundTime={txnData?.transaction?.['round-time']}
+      createdAssetIndex={txnData?.transaction?.['created-asset-index']}
       assetFreezeTransaction={
-        txnData?.data?.transaction?.['asset-freeze-transaction']
+        txnData?.transaction?.['asset-freeze-transaction']
       }
     />
   );

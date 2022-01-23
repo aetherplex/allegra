@@ -285,7 +285,7 @@ function TransactionInfo({
 
   const renderInfo = () => (
     <Flex
-      w="70%"
+      w="100%"
       mt={6}
       flexDir="column"
       p={5}
