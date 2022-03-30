@@ -37,7 +37,7 @@ function DonatePage() {
                         color="green.500"
                         target="_blank"
                     >
-                        @daoarchitect
+                        @0xTsubi
                     </Link>
                     ).
                 </Text>
