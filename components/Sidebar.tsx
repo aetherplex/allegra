@@ -16,6 +16,7 @@ import { useBoxShadow } from '../hooks/useBoxShadow';
 import { useWindowSize } from '../hooks/useWindowSize';
 import { selectNetwork } from '../store/networkSlice/selectors';
 import { useAppDispatch } from '../utils/helpers';
+import { ReactSVG } from 'react-svg';
 
 function Sidebar() {
     const { colorMode, toggleColorMode } = useColorMode();
@@ -45,9 +46,15 @@ function Sidebar() {
                     alignItems="center"
                     flexDir="column"
                 >
-                    <Heading fontSize={{ base: 'lg', lg: '2xl' }}>
+                    <ReactSVG
+                        src="allegra-logo-inline.svg"
+                        beforeInjection={(svg) => {
+                            svg.setAttribute('style', 'width: 75px');
+                        }}
+                    />
+                    {/* <Heading fontSize={{ base: 'lg', lg: '2xl' }}>
                         Allegra
-                    </Heading>
+                    </Heading> */}
                 </Flex>
                 <Stack mt={24} spacing="3rem" alignItems="center">
                     <Link href="/" passHref>
